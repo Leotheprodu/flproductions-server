@@ -15,7 +15,7 @@ const credentials={
 }
 
 // Hacer que node sirva los archivos de nuestro app React
-app.use(express.static(path.resolve(__dirname, './dist')));
+app.use(express.static(path.resolve(__dirname, '../app/dist')));
 
 //si no tengo cors, debo usar esto
 /* app.use((req, res, next) => {
