@@ -19,7 +19,7 @@ apibd.get("/api/artistas", (req, res) => {
   });
   apibd.get("/api/artistas/producciones", (req, res) => {
     const connection = mysql.createConnection(credentials);
-    connection.query('SELECT producciones.*, artistas.nombre_artista, artistas.instagram, artistas.imagen FROM producciones INNER JOIN artistas ON producciones.id_artista = artistas.id ORDER BY producciones.id DESC', (error, result) =>{
+    connection.query('SELECT producciones.*, artistas.nombre_artista, artistas.instagram, artistas.imagen FROM producciones INNER JOIN artistas ON producciones.id_artista = artistas.id ORDER BY producciones.fecha_lanzamiento DESC', (error, result) =>{
       if(error) {
         res.status(500).send(error);
       }else {
