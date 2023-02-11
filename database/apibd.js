@@ -73,6 +73,5 @@ apibd.get("/api/artistas", (req, res) => {
       }
     });
   });
- 
 
   module.exports = apibd
