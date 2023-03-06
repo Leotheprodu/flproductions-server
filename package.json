@@ -3,7 +3,7 @@
   "homepage": ".",
   "private": true,
   "version": "1.0.0",
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:5173",
   "scripts": {},
   "dependencies": {
     "cookie-parser": "^1.4.6",
@@ -18,5 +18,8 @@
   "license": "ISC",
   "engines": {
     "node": "18.11.0"
+  },
+  "devDependencies": {
+    "vite": "^4.1.4"
   }
 }

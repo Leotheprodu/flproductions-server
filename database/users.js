@@ -1,8 +1,8 @@
 const express = require("express");
-const login = express();
+const app = express();
+const cors = require("cors");
 const mysql = require("mysql2");
 const mysql2 = require("mysql2/promise");
-const cors = require("cors");
 const session = require('express-session');
 const credentials = require("./dbconnections");
 const MySQLStore = require('express-mysql-session')(session);
@@ -17,35 +17,23 @@ const sess = {
   saveUninitialized: false,
   cookie: { maxAge: 3600000 } // Configuramos una cookie segura y establecemos una expiración de 1 hora
 }
+app.use(cors({
+  origin: "http://localhost:5173", // use your actual domain name (or localhost), using * is not recommended
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+  credentials: true
+}))
 
-/* login.use((req, res, next) => {
-  if (req.session.isLoggedIn) {
-    // Si el usuario ha iniciado sesión, no regeneramos la sesión
-    return next();
-  }
-
-  // Si el usuario no ha iniciado sesión, regeneramos la sesión
-  req.session.regenerate((err) => {
-    if (err) console.error('Error al regenerar la sesión:', err);
-
-    return next();
-  });
-}); */
-
-
-
-if (login.get('env') === 'production') {
-  login.set('trust proxy', 1) // trust first proxy
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
 }
 
-login.use(session(sess));
-
-login.use(cors({ credential: true, origin: "http://localhost:5173" }));
-login.use(express.json());
+app.use(session(sess));
+app.use(express.json());
 
 // Manejamos la solicitud de inicio de sesión
-login.post("/api/login", (req, res) => {
+app.post("/api/login", (req, res) => {
   const { email, password } = req.body;
 
   // Creamos una consulta preparada con marcadores de posición
@@ -108,7 +96,7 @@ login.post("/api/login", (req, res) => {
 });
 
 
-login.post("/api/logout", (req, res) => {
+app.post("/api/logout", (req, res) => {
 
   // primero eliminamos el session_id de la tabla de usuarios, luego, Destruimos la sesión del usuario y eliminamos la cookie de sesión
   const sessId = req.session.id
@@ -126,7 +114,7 @@ login.post("/api/logout", (req, res) => {
   res.status(200).json({ message: "Cierre de sesión exitoso!" });
 });
 
-login.get("/api/check-session", (req, res) => {
+app.get("/api/check-session", (req, res) => {
   if (req.session.isLoggedIn) {
     res.status(200).json({ isLoggedIn: true, userId: req.session.user_id, role: req.session.role });
   } else {
@@ -134,9 +122,5 @@ login.get("/api/check-session", (req, res) => {
   }
 });
 
-/* login.get("/", (req, res) => {
-  
-}); */
 
-
-module.exports = login;
+module.exports = app;
