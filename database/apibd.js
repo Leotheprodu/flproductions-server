@@ -4,7 +4,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const credentials = require("./dbconnections")
 
-apibd.use(cors());
+apibd.use(cors({ credential: true, origin: "http://localhost:5173" }));
 
 apibd.get("/api/artistas", (req, res) => {
     const connection = mysql.createConnection(credentials);

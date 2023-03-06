@@ -13,10 +13,27 @@ const sess = {
   key: 'sessionId',
   secret: "music oso",
   store: sessionStore,
-  resave: false,
+  resave: true,
   saveUninitialized: false,
   cookie: { maxAge: 3600000 } // Configuramos una cookie segura y establecemos una expiración de 1 hora
 }
+
+/* login.use((req, res, next) => {
+  if (req.session.isLoggedIn) {
+    // Si el usuario ha iniciado sesión, no regeneramos la sesión
+    return next();
+  }
+
+  // Si el usuario no ha iniciado sesión, regeneramos la sesión
+  req.session.regenerate((err) => {
+    if (err) console.error('Error al regenerar la sesión:', err);
+
+    return next();
+  });
+}); */
+
+
+
 if (login.get('env') === 'production') {
   login.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
@@ -24,27 +41,37 @@ if (login.get('env') === 'production') {
 
 login.use(session(sess));
 
-login.use(cors());
+login.use(cors({ credential: true, origin: "http://localhost:5173" }));
 login.use(express.json());
 
 // Manejamos la solicitud de inicio de sesión
 login.post("/api/login", (req, res) => {
   const { email, password } = req.body;
-  
+
   // Creamos una consulta preparada con marcadores de posición
   const query = "SELECT * FROM usuarios WHERE email = ? AND password = ?";
   const values = [email, password];
-  
+
   // Ejecutamos la consulta preparada con los valores de los marcadores de posición
   connection.query(query, values, (error, results) => {
     if (error) {
       // Enviamos una respuesta de error si hay un error en la consulta
       res.status(500).json({ message: "Error en la consulta." });
     } else if (results.length === 1) {
-      
+
       req.session.isLoggedIn = true;
-      res.cookie("sessionId", req.session.id, { httpOnly: true, secure: true, maxAge: 3600000 }); // Establecemos la cookie de sesióng
+      req.session.user_id = results[0].id;
+      req.session.role = results[0].role_id;
       
+
+      if (process.env.NODE_ENV === 'production'){
+        res.cookie("sessionId", req.session.id, { httpOnly: true, secure: true, maxAge: 3600000 }); // Establecemos la cookie de sesión
+
+      }else{
+        res.cookie("sessionId", req.session.id, { httpOnly: true, secure: false, maxAge: 3600000 }); 
+      }
+
+      //actualiza los valores de la tabla de usuarios
       const valor = req.session.id;
       const id = results[0].id;
       connection.query(
@@ -53,56 +80,63 @@ login.post("/api/login", (req, res) => {
         (error, results) => {
           if (error) {
             console.error(error);
-          } else {
-            console.log('Valor actualizado en la tabla');
           }
         }
       );
+
+      //he vuelto a generar la cosulta para actualizar la tabla de usuario con el nuevo session_id
       connection.query(query, values, (error, results) => {
         if (error) {
           // Enviamos una respuesta de error si hay un error en la consulta
           res.status(500).json({ message: "Error en la consulta." });
         } else {
-          res.status(200).json({ message: "Inicio de sesión exitoso!", usuario: results[0] });
+          // Enviamos una respuesta exitosa si las credenciales son válidas
+          res.status(200).json({ message: "Inicio de sesión exitoso!" });
+          
 
         }
 
       });
 
-      
-      // Enviamos una respuesta exitosa si las credenciales son válidas
-      
+
+
     } else {
       // Enviamos una respuesta de error si las credenciales son inválidas
       res.status(401).json({ message: "Credenciales inválidas." });
     }
   });
 });
+
+
 login.post("/api/logout", (req, res) => {
-  // Destruimos la sesión del usuario y eliminamos la cookie de sesión
-  const sessId=req.session.id
+
+  // primero eliminamos el session_id de la tabla de usuarios, luego, Destruimos la sesión del usuario y eliminamos la cookie de sesión
+  const sessId = req.session.id
   connection.query(
     'UPDATE usuarios SET session_id = ? WHERE session_id = ?',
     [null, sessId],
     (error, results) => {
       if (error) {
         console.error(error);
-      } else {
-        console.log('Valor actualizado en la tabla');
       }
     }
-    );
-    req.session.destroy();
-    res.clearCookie("sessionId", { httpOnly: true, secure: true });
+  );
+  req.session.isLoggedIn = false;
+  /* res.clearCookie("sessionId", { httpOnly: true, secure: true }); */
   res.status(200).json({ message: "Cierre de sesión exitoso!" });
 });
 
 login.get("/api/check-session", (req, res) => {
   if (req.session.isLoggedIn) {
-    res.status(200).json({ isLoggedIn: true });
+    res.status(200).json({ isLoggedIn: true, userId: req.session.user_id, role: req.session.role });
   } else {
-    res.status(401).json({ isLoggedIn: false });
+    res.status(200).json({ isLoggedIn: false });
   }
 });
+
+/* login.get("/", (req, res) => {
+  
+}); */
+
 
 module.exports = login;
