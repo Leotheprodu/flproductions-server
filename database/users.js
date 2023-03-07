@@ -44,19 +44,35 @@ app.post("/api/login", (req, res) => {
   connection.query(query, values, (error, results) => {
     if (error) {
       // Enviamos una respuesta de error si hay un error en la consulta
-      res.status(500).json({ message: "Error en la consulta." });
-    } else if (results.length === 1) {
-
+      res.status(500).json({ message: "Error en la consulta, el usuario no existe" });
+    } else if (results.length === 1 && req.session.user_id === results[0].id) {
+      
       req.session.isLoggedIn = true;
       req.session.user_id = results[0].id;
       req.session.role = results[0].role_id;
-      
+      handlelogin(results);
+    }else if(results.length === 1 && req.session.user_id !== results[0].id) { 
+      /* res.clearCookie("sessionId", { httpOnly: true, secure: true });
+      req.session.regenerate(); */
+      req.session.isLoggedIn = true;
+      req.session.user_id = results[0].id;
+      req.session.role = results[0].role_id;
 
-      if (process.env.NODE_ENV === 'production'){
+      handlelogin(results);
+
+
+
+    } else {
+      // Enviamos una respuesta de error si las credenciales son inválidas
+      res.status(401).json({ message: "Credenciales inválidas." });
+    }
+
+    function handlelogin(results) {
+      if (process.env.NODE_ENV === 'production') {
         res.cookie("sessionId", req.session.id, { httpOnly: true, secure: true, maxAge: 3600000 }); // Establecemos la cookie de sesión
 
-      }else{
-        res.cookie("sessionId", req.session.id, { httpOnly: true, secure: false, maxAge: 3600000 }); 
+      } else {
+        res.cookie("sessionId", req.session.id, { httpOnly: true, secure: false, maxAge: 3600000 });
       }
 
       //actualiza los valores de la tabla de usuarios
@@ -79,18 +95,12 @@ app.post("/api/login", (req, res) => {
           res.status(500).json({ message: "Error en la consulta." });
         } else {
           // Enviamos una respuesta exitosa si las credenciales son válidas
-          res.status(200).json({ message: "Inicio de sesión exitoso!" });
-          
+          res.status(200).json({ message: "Inicio de sesión exitoso!", isLoggedIn: true, userId: req.session.user_id, role: req.session.role });
+
 
         }
 
       });
-
-
-
-    } else {
-      // Enviamos una respuesta de error si las credenciales son inválidas
-      res.status(401).json({ message: "Credenciales inválidas." });
     }
   });
 });
@@ -110,7 +120,6 @@ app.post("/api/logout", (req, res) => {
     }
   );
   req.session.isLoggedIn = false;
-  /* res.clearCookie("sessionId", { httpOnly: true, secure: true }); */
   res.status(200).json({ message: "Cierre de sesión exitoso!" });
 });
 
@@ -120,6 +129,21 @@ app.get("/api/check-session", (req, res) => {
   } else {
     res.status(200).json({ isLoggedIn: false });
   }
+});
+
+app.get('/api/usuarios/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  if(id === req.session.user_id && req.session.isLoggedIn) {
+    const query = `SELECT * FROM usuarios WHERE id = ?`;
+    const values = [id];
+    connection.query(query, values,(error, results, fields) => {
+      if (error) throw error;
+      res.status(200).json(results[0]);
+    });
+  }else{
+    res.status(401).json({ message: "No tienes permiso para acceder a este recurso." });
+  }
+
 });
 
 
