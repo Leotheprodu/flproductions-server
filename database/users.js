@@ -137,8 +137,12 @@ app.get('/api/usuarios/:id', (req, res) => {
     const query = `SELECT * FROM usuarios WHERE id = ?`;
     const values = [id];
     connection.query(query, values,(error, results, fields) => {
-      if (error) throw error;
-      res.status(200).json(results[0]);
+      if (error) {
+        console.error(error);
+      }else{
+        res.status(200).json({user_data: results[0]});
+
+      }
     });
   }else{
     res.status(401).json({ message: "No tienes permiso para acceder a este recurso." });
