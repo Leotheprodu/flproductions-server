@@ -50,12 +50,29 @@ connection.query(query, values, (error, results) => {
     // Enviamos una respuesta de error si hay un error en la consulta
     res.status(500).json({ message: "Error en la consulta, el usuario no existe" });
   } else if (results.length === 1) {
+    //buscamos los roles del usuario y lo almacenamos en la sesion
+    const rolesUsuario = (id) => {
+      const query = "SELECT role_id FROM role_users WHERE user_id = ?";
+      const values = [id];
+      connection.query(query, values, (error, results) => {
+        
+        if (error) {
+          console.log(error)
+          
+        } else{
+          req.session.roles = results.map(obj => obj.role_id).filter(val => val !== undefined);
+        }
+        
+      });
+    }
+    
+  rolesUsuario(results[0].id)
+    
     // Comparamos el password hasheado almacenado en la base de datos con el password proporcionado en la solicitud de login
     bcrypt.compare(password, results[0].password, (error, isMatch) => {
       if (isMatch) {
         req.session.isLoggedIn = true;
         req.session.user_id = results[0].id;
-        req.session.role = results[0].role_id;
         handlelogin();
       } else {
         // Enviamos una respuesta de error si las credenciales son inválidas
@@ -74,7 +91,7 @@ connection.query(query, values, (error, results) => {
       } else {
         res.cookie("sessionId", req.session.id, { httpOnly: true, secure: false, maxAge: 3600000 });
       }
-      res.status(200).json({ message: "Inicio de sesión exitoso!", isLoggedIn: true, userId: req.session.user_id, role: req.session.role });
+      res.status(200).json({ message: "Inicio de sesión exitoso!", isLoggedIn: true, userId: req.session.user_id, roles: req.session.roles });
 
     }
   });
@@ -89,7 +106,7 @@ app.post("/api/logout", (req, res) => {
 
 app.get("/api/check-session", (req, res) => {
   if (req.session.isLoggedIn) {
-    res.status(200).json({ isLoggedIn: true, userId: req.session.user_id, role: req.session.role });
+    res.status(200).json({ isLoggedIn: true, userId: req.session.user_id, roles: req.session.roles });
   } else {
     res.status(200).json({ isLoggedIn: false });
   }
