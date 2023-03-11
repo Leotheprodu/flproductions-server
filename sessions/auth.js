@@ -94,12 +94,12 @@ router.post("/signup", (req, res) => {
 
   const query = "SELECT * FROM usuarios WHERE email = ?";
   const values = [email];
-
+  
   connection.query(query, values, (error, results) => {
     if (error) {
       // Enviamos una respuesta de error si hay un error en la consulta
       res.status(500).json({ message: "Ha ocurrido un error al verificar el correo" });
-    } else if (results.length >= 1) {
+    } else if (results.length >= 1 || req.session.isLoggedIn) {
       res.status(403).json({ message: "Correo ya existe" });
       return;
     }else{
