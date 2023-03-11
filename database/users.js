@@ -1,6 +1,4 @@
 const express = require("express");
-const app = express();
-const cors = require("cors");
 const mysql = require("mysql2");
 const mysql2 = require("mysql2/promise");
 const session = require('express-session');
@@ -11,6 +9,7 @@ const connection2 = mysql2.createPool(credentials);
 const sessionStore = new MySQLStore({}/* session store options */, connection2);
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const app = express();
 
 const sess = {
   key: 'sessionId',
@@ -20,20 +19,15 @@ const sess = {
   saveUninitialized: false,
   cookie: { maxAge: 3600000 } // Configuramos una cookie segura y establecemos una expiración de 1 hora
 }
-app.use(cors({
-  origin: "http://localhost:5173", // use your actual domain name (or localhost), using * is not recommended
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
-  credentials: true
-}))
 
+app.use(express.json());
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
 }
 
 app.use(session(sess));
-app.use(express.json());
+
 
 // Manejamos la solicitud de inicio de sesión
 app.post("/api/login", (req, res) => {
@@ -133,7 +127,7 @@ app.get('/api/usuarios/:id', (req, res) => {
 
 
 app.post("/api/signup", (req, res) => {
-  const { email, password, username,fecha_creacion, role_id } = req.body;
+  const { email, password, username,fecha_creacion } = req.body;
 
   // Hashea el password utilizando bcrypt
   bcrypt.hash(password, saltRounds, function(err, hash) {
@@ -148,8 +142,7 @@ app.post("/api/signup", (req, res) => {
       username: username,
       password: hash,
       email: email,
-      fecha_creacion: fecha_creacion,
-      role_id: role_id
+      fecha_creacion: fecha_creacion
     };
 
     // Inserta el nuevo usuario en la tabla de usuarios

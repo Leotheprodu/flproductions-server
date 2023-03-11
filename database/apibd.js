@@ -1,16 +1,9 @@
 const express = require("express");
 const app = express();
-const cors = require("cors");
 const mysql = require("mysql2");
 const credentials = require("./dbconnections")
 const connection = mysql.createConnection(credentials);
 
-app.use(cors({
-  origin: "http://localhost:5173", // use your actual domain name (or localhost), using * is not recommended
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
-  credentials: true
-}));
 app.use(express.json());
 
 app.get("/api/artistas", (req, res) => {
