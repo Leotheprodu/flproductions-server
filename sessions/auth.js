@@ -46,7 +46,7 @@ router.post("/login", (req, res) => {
       bcrypt.compare(password, results[0].password, (error, isMatch) => {
         if (isMatch) {
           req.session.isLoggedIn = true;
-          req.session.user_id = results[0].id;
+          req.session.user = results[0];
           handlelogin();
         } else {
           // Enviamos una respuesta de error si las credenciales son inválidas
@@ -65,7 +65,7 @@ router.post("/login", (req, res) => {
       } else {
         res.cookie("sessionId", req.session.id, { httpOnly: true, secure: false, maxAge: 3600000 });
       }
-      res.status(200).json({ message: "Inicio de sesión exitoso!", isLoggedIn: true, userId: req.session.user_id, roles: req.session.roles });
+      res.status(200).json({ message: "Inicio de sesión exitoso!", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
 
     }
   });
@@ -75,14 +75,14 @@ router.post("/login", (req, res) => {
 router.post("/logout", (req, res) => {
 
   req.session.isLoggedIn = false;
-  res.status(200).json({ message: "Cierre de sesión exitoso!" });
+  res.status(200).json({ message: "Cierre de sesión exitoso!",isLoggedIn: false, user: req.session.user, roles: req.session.roles});
 });
 
 router.get("/check-session", (req, res) => {
   if (req.session.isLoggedIn) {
-    res.status(200).json({ isLoggedIn: true, userId: req.session.user_id, roles: req.session.roles });
+    res.status(200).send({message:"El usuario ha iniciado sesion", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
   } else {
-    res.status(200).json({ isLoggedIn: false });
+    res.status(200).send({message:"El usuario no ha iniciado sesion", isLoggedIn: false, user:{},roles:[]});
   }
 });
 
@@ -99,6 +99,8 @@ router.post("/signup", (req, res) => {
     if (error) {
       // Enviamos una respuesta de error si hay un error en la consulta
       res.status(500).json({ message: "Ha ocurrido un error al verificar el correo" });
+
+      // revisamos que el correo no exista en la bd
     } else if (results.length >= 1 || req.session.isLoggedIn) {
       res.status(403).json({ message: "Correo ya existe" });
       return;
