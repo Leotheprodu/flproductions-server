@@ -10,15 +10,27 @@ const connection = mysql.createConnection(credentials);
 
 router.get('/usuarios/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    if (id === req.session.user_id && req.session.isLoggedIn) {
-      const query = `SELECT id, username, email, fecha_creacion, ultima_actualizacion FROM usuarios WHERE id = ?`;
+    if (id === req.session.user.id && req.session.isLoggedIn) {
+      const query = `SELECT * FROM usuarios WHERE id = ?`;
       const values = [id];
       connection.query(query, values, (error, results, fields) => {
         if (error) {
           console.error(error);
         } else {
-          res.status(200).json({ user_data: results[0] });
-  
+            const query2 = "SELECT role_id FROM role_users WHERE user_id = ?";
+            const value = id;
+            req.session.user = results[0];
+            connection.query(query2, value, (error, results) => {
+              if (error) {
+                console.log(error)
+    
+              } else {
+                req.session.roles = results.map(obj => obj.role_id).filter(val => val !== undefined);
+                res.status(200).send({ message: "Datos de usuario generados con exito", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
+              }
+    
+            });
+          
         }
       });
     } else {
