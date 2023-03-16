@@ -2,7 +2,6 @@
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
-
 const credentials = require("./database/dbconnections");
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
