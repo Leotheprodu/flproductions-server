@@ -72,7 +72,6 @@ router.post("/login", (req, res) => {
   });
 });
 
-
 router.post("/logout", (req, res) => {
 
   req.session.isLoggedIn = false;
@@ -86,9 +85,6 @@ router.get("/check-session", (req, res) => {
     res.status(200).send({ message: "El usuario no ha iniciado sesion", isLoggedIn: false, user: {}, roles: [] });
   }
 });
-
-
-
 
 router.post("/signup", (req, res) => {
   const { email, password, username, fecha_creacion } = req.body;
@@ -264,4 +260,6 @@ router.get('/verificar-correo/:token', (req, res) => {
 
 
 });
+
+
 module.exports = router;

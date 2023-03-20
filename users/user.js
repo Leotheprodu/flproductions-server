@@ -39,4 +39,19 @@ router.get('/usuarios/:id', (req, res) => {
   
   });
 
+
+  router.put('/actualizar-usuarios/:id', (req, res) => {
+    const id = req.params.id;
+    const datosActualizados = req.body;
+    connection.query('UPDATE usuarios SET ? WHERE id = ?', [datosActualizados, id], (error, resultado) => {
+      if (error) {
+        console.error('Error al actualizar los datos: ', error);
+        res.status(500).send('Error al actualizar los datos');
+        return;
+      }
+      console.log('Datos actualizados correctamente');
+      res.send('Datos actualizados correctamente');
+    });
+  });
+
   module.exports = router;
