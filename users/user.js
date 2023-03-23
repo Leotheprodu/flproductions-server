@@ -166,9 +166,10 @@ router.put('/actualizar-usuarios/:id', (req, res) => {
 
 });
 
-router.put('/verificar-email/:email', (req, res) => {
-
-  const email = req.params.id;
+router.get('/verificar-email/:email', (req, res) => {
+const username = req.session.user.username;
+  const email = req.params.email;
+  console.log(email);
   const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
   const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5000/'}api/verificar-correo/${token}`;
   const newTempToken = {
@@ -184,7 +185,7 @@ router.put('/verificar-email/:email', (req, res) => {
         res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
         return;
       }
-      ejs.renderFile(__dirname + '/sign_up.ejs', { username, link }, (error, data) => {
+      ejs.renderFile(__dirname + '/sign_up.ejs', { username , link }, (error, data) => {
         if (error) {
           console.log(error);
           res.send(error);
