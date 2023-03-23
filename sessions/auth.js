@@ -145,7 +145,7 @@ router.post("/signup", (req, res) => {
               res.send(error);
             } else {
               const mailOptions = {
-                from: 'no-responder@flproductionscr.com', // Coloca el correo desde el que enviarás los correos
+                from: 'FLProductions <no-responder@flproductionscr.com>', // Coloca el correo desde el que enviarás los correos
                 to: email, // Coloca el correo del destinatario
                 subject: 'Verifique su correo',
                 html: data // Contenido HTML generado a partir de la plantilla
