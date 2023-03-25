@@ -26,7 +26,7 @@ router.get('/usuarios/:id', (req, res) => {
         req.session.user = results[0];
         connection.query(query2, value, (error, results) => {
           if (error) {
-            console.log(error)
+            console.log(error);
 
           } else {
             req.session.roles = results.map(obj => obj.role_id).filter(val => val !== undefined);

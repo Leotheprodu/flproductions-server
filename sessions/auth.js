@@ -72,7 +72,7 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.post("/logout", (req, res) => {
+router.get("/logout", (req, res) => {
 
   req.session.isLoggedIn = false;
   res.status(200).json({ message: "Cierre de sesión exitoso!", isLoggedIn: false, user: req.session.user, roles: req.session.roles });
