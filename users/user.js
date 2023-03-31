@@ -31,6 +31,7 @@ router.get('/usuarios/:id', (req, res) => {
           } else {
             req.session.roles = results.map(obj => obj.role_id).filter(val => val !== undefined);
             res.status(200).send({ message: "Datos de usuario generados con exito", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
+            connection.end();
           }
 
         });
@@ -43,6 +44,135 @@ router.get('/usuarios/:id', (req, res) => {
 
 });
 
+router.post('/recuperar-password', (req, res) => {
+  const { email } = req.body;
+  const token = crypto.randomBytes(6).toString('hex');// Genera un token aleatorio de 32 caracteres
+  const newTempToken = {
+    token: token,
+    user_email: email,
+    type: 'password'
+  };
+
+  connection.query('SELECT * FROM usuarios WHERE email = ?', email, function(error, results) { 
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: "Ha ocurrido un error al consultar en usuarios" });
+      return;
+    }
+    if (results.length === 1) {
+
+      connection.query('INSERT INTO temp_token_pool SET ?', newTempToken, function (error, results, fields) {
+        if (error) {
+          console.error(error);
+          res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
+          return;
+        }
+        ejs.renderFile(__dirname + '/recuperar-password.ejs', { token }, (error, data) => {
+          if (error) {
+            console.log(error);
+            res.send(error);
+          } else {
+            const mailOptions = {
+              from: 'FLProductions <no-responder@flproductionscr.com>', // Coloca el correo desde el que enviarás los correos
+              to: email, // Coloca el correo del destinatario
+              subject: 'PIN para recuperar contraseña',
+              html: data // Contenido HTML generado a partir de la plantilla
+            };
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                console.log(error);
+                res.send(error);
+              } else {
+                
+                res.status(200).json({ message: "PIN Enviado" });
+                /* connection.end(); */
+                setTimeout(function () {
+                  connection.query('DELETE FROM temp_token_pool WHERE user_email = ? AND type = ?', [email, 'password'], function (error, results, fields) {
+                    if (error) {
+                      console.error(error);
+                      res.status(500).json({ error: "Ha ocurrido un error al borrar los el registro en temp_token_pool" });
+                      return;
+                    }
+                  });
+                }, 600000); // 600000 milisegundos = 10 minutos
+              }
+            });
+          }
+        });
+        
+    
+      });
+      
+    } else {
+      res.status(403).json({ message: "El email no esta en el sistema" });
+
+    }
+
+  });
+  
+
+
+});
+router.post('/recuperar-password-paso2', (req, res) => {
+  const { email, password, pin } = req.body;
+
+  connection.query('SELECT * FROM temp_token_pool WHERE token = ?',pin, function (err, resultados) {
+
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: "Ha ocurrido un error al buscar el PIN" });
+      
+      return;
+    }
+    if (resultados.length === 1 && resultados[0].token === pin) {
+      connection.query('SELECT * FROM usuarios WHERE email = ?', email, function(error, results) { 
+        if (error) {
+          console.error(error);
+          res.status(500).json({ error: "Ha ocurrido un error al consultar en usuarios" });
+          return;
+        }
+        if (results.length === 1) {
+          const hashpassword = async () => {
+            bcrypt.hash(password, saltRounds, function (err, hash) {
+              if (err) {
+                console.error(err);
+                res.status(500).json({ error: "Ha ocurrido un error con el password" });
+                return;
+              }
+              // Agregar el hash al array values
+        
+                connection.query('UPDATE usuarios SET password = ? WHERE id = ?', [hash,results[0].id], function(error, results) {
+                  if (error) {
+                    console.error(error);
+                    res.status(500).json({ error: "Ha ocurrido un error actualizando usuario" });
+                    return;
+                  } else {
+    
+                    res.status(200).json({ message: "Datos Actualizados Exitosamente!"});
+                  }
+          
+                });
+        
+              
+            });
+          }
+          hashpassword();
+    
+          
+        } else {
+          res.status(403).json({ message: "El email no esta en el sistema" });
+    
+        }
+    
+      });
+
+    } else{
+      res.status(403).json({ error: "El PIN ha caducado o es incorrecto" });
+    }
+
+  });
+
+});
 
 router.put('/actualizar-usuarios/:id', (req, res) => {
 
@@ -52,7 +182,8 @@ router.put('/actualizar-usuarios/:id', (req, res) => {
   const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5000/'}api/verificar-correo/${token}`;
   const newTempToken = {
     token: token,
-    user_email: email
+    user_email: email,
+    type: 'role'
   };
   let sql = 'UPDATE usuarios SET';
   let values = [];
@@ -126,6 +257,7 @@ router.put('/actualizar-usuarios/:id', (req, res) => {
       emailHandle();
       req.session.user.username = username;
       res.status(200).json({ message: "Datos Actualizados Exitosamente!", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
+      
     });
   }
 
@@ -167,25 +299,25 @@ router.put('/actualizar-usuarios/:id', (req, res) => {
 });
 
 router.get('/verificar-email/:email', (req, res) => {
-const username = req.session.user.username;
+  const username = req.session.user.username;
   const email = req.params.email;
-  console.log(email);
   const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
   const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5000/'}api/verificar-correo/${token}`;
   const newTempToken = {
     token: token,
-    user_email: email
+    user_email: email,
+    type: 'role'
   };
 
   if (!req.session.roles.includes(1)) {
-    
+
     connection.query('INSERT INTO temp_token_pool SET ?', newTempToken, function (error, results, fields) {
       if (error) {
         console.error(error);
         res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
         return;
       }
-      ejs.renderFile(__dirname + '/sign_up.ejs', { username , link }, (error, data) => {
+      ejs.renderFile(__dirname + '/sign_up.ejs', { username, link }, (error, data) => {
         if (error) {
           console.log(error);
           res.send(error);
@@ -207,9 +339,10 @@ const username = req.session.user.username;
         }
       });
       res.status(200).json({ message: "Correo de Verificacion Enviado" });
+      
     });
 
-  } else{
+  } else {
     res.status(401).json({ error: "Debes haber iniciado sesion" });
   }
 

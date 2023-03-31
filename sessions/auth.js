@@ -10,7 +10,7 @@ const transporter = require("../database/emailcred");
 const crypto = require('crypto');
 
 
-// Manejamos la solicitud de inicio de sesión
+
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -94,7 +94,8 @@ router.post("/signup", (req, res) => {
   const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5000/'}api/verificar-correo/${token}`;
   const newTempToken = {
     token: token,
-    user_email: email
+    user_email: email,
+    type: 'role'
   };
   connection.query(query, values, (error, results) => {
     if (error) {
@@ -127,7 +128,7 @@ router.post("/signup", (req, res) => {
         connection.query('INSERT INTO usuarios SET ?', newUser, function (error, results, fields) {
           if (error) {
             console.error(error);
-            res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro" });
+            res.status(500).json({ error: "Ha ocurrido un error al guardar la informacion del nuevo usuario en la tabla usuarios" });
             return;
           }
           connection.query('INSERT INTO temp_token_pool SET ?', newTempToken, function (error, results, fields) {
@@ -138,6 +139,7 @@ router.post("/signup", (req, res) => {
             }
           });
           res.status(200).json({ message: "Usuario creado con éxito" });
+
           // Renderiza la plantilla con la variable del enlace
           ejs.renderFile(__dirname + '/sign_up.ejs', { username, link }, (error, data) => {
             if (error) {
@@ -175,16 +177,16 @@ router.post("/signup", (req, res) => {
 
 router.get('/verificar-correo/:token', (req, res) => {
   const token = req.params.token;
-  const query = "SELECT * FROM temp_token_pool WHERE token = ?";
+  const query = "SELECT * FROM temp_token_pool WHERE token = ? AND type = ?";
 
-  connection.query(query, token, (error, results) => {
+  connection.query(query, [token, 'role'], (error, results) => {
     if (error) {
       
       res.status(500).json({ message: "Ha ocurrido un error al verificar el correo" });
 
       //buscamos en correo en la tabla de usuarios
     } else if (results.length === 1) {
-      const email = results[0].user_email
+      const email = results[0].user_email;
       const query2 = "SELECT * FROM usuarios WHERE email = ?";
       connection.query(query2, email, (error, results) => {
         if (error) {
@@ -206,7 +208,7 @@ router.get('/verificar-correo/:token', (req, res) => {
 
               // borramos el token pues ya fue verificado
             }else {
-              connection.query('DELETE FROM temp_token_pool WHERE user_email = ?', email, function (error, results, fields) {
+              connection.query('DELETE FROM temp_token_pool WHERE user_email = ? AND type = ?', [email, 'role'], function (error, results, fields) {
                 if (error) {
                   console.error(error);
                   res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
@@ -243,6 +245,7 @@ router.get('/verificar-correo/:token', (req, res) => {
                   </html>`;
                   res.setHeader('Content-Type', 'text/html');
                   res.send(miHtml);
+    
                 }
               });
             }
