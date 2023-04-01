@@ -91,7 +91,7 @@ router.post("/signup", (req, res) => {
   const query = "SELECT * FROM usuarios WHERE email = ?";
   const values = [email];
   const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
-  const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5000/'}api/verificar-correo/${token}`;
+  const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5173/'}verificar-email/${token}`;
   const newTempToken = {
     token: token,
     user_email: email,
@@ -215,36 +215,7 @@ router.get('/verificar-correo/:token', (req, res) => {
                   return;
                 }else {
                   //enviamos la respuesta al cliente
-                  const miHtml = `<!DOCTYPE html>
-                  <html>
-                    <head>
-                      <title>Correo Verificado</title>
-                      <style>
-                        body {
-                          text-align: center;
-                          font-family: Arial, sans-serif;
-                          background-color: #f2f2f2;
-                        }
-                        
-                        h1 {
-                          color: #ebc246;
-                          font-size: 3rem;
-                          margin-top: 50px;
-                        }
-                        
-                        p {
-                          font-size: 1.2rem;
-                          margin-top: 20px;
-                        }
-                      </style>
-                    </head>
-                    <body>
-                      <h1>Se ha verificado su correo</h1>
-                      <p>Ya puedes cerrar esta ventana</p>
-                    </body>
-                  </html>`;
-                  res.setHeader('Content-Type', 'text/html');
-                  res.send(miHtml);
+                  res.status(200).json({ message: "Correo verificado exitosamente" });
     
                 }
               });
@@ -255,6 +226,8 @@ router.get('/verificar-correo/:token', (req, res) => {
     
       });
 
+    }else if (results.length === 0){
+      res.status(403).json({ message: "El email ya ha sido verificado" });
     }
 
   });

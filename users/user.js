@@ -31,7 +31,7 @@ router.get('/usuarios/:id', (req, res) => {
           } else {
             req.session.roles = results.map(obj => obj.role_id).filter(val => val !== undefined);
             res.status(200).send({ message: "Datos de usuario generados con exito", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
-            connection.end();
+          
           }
 
         });
@@ -302,7 +302,7 @@ router.get('/verificar-email/:email', (req, res) => {
   const username = req.session.user.username;
   const email = req.params.email;
   const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
-  const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5000/'}api/verificar-correo/${token}`;
+  const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5173/'}verificar-email/${token}`;
   const newTempToken = {
     token: token,
     user_email: email,
