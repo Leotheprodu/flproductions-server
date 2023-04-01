@@ -31,7 +31,7 @@ router.get('/usuarios/:id', (req, res) => {
           } else {
             req.session.roles = results.map(obj => obj.role_id).filter(val => val !== undefined);
             res.status(200).send({ message: "Datos de usuario generados con exito", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
-          
+
           }
 
         });
@@ -53,7 +53,7 @@ router.post('/recuperar-password', (req, res) => {
     type: 'password'
   };
 
-  connection.query('SELECT * FROM usuarios WHERE email = ?', email, function(error, results) { 
+  connection.query('SELECT * FROM usuarios WHERE email = ?', email, function (error, results) {
     if (error) {
       console.error(error);
       res.status(500).json({ error: "Ha ocurrido un error al consultar en usuarios" });
@@ -83,7 +83,7 @@ router.post('/recuperar-password', (req, res) => {
                 console.log(error);
                 res.send(error);
               } else {
-                
+
                 res.status(200).json({ message: "PIN Enviado" });
                 /* connection.end(); */
                 setTimeout(function () {
@@ -99,33 +99,33 @@ router.post('/recuperar-password', (req, res) => {
             });
           }
         });
-        
-    
+
+
       });
-      
+
     } else {
       res.status(403).json({ message: "El email no esta en el sistema" });
 
     }
 
   });
-  
+
 
 
 });
 router.post('/recuperar-password-paso2', (req, res) => {
   const { email, password, pin } = req.body;
 
-  connection.query('SELECT * FROM temp_token_pool WHERE token = ?',pin, function (err, resultados) {
+  connection.query('SELECT * FROM temp_token_pool WHERE token = ?', pin, function (err, resultados) {
 
     if (err) {
       console.error(err);
       res.status(500).json({ error: "Ha ocurrido un error al buscar el PIN" });
-      
+
       return;
     }
     if (resultados.length === 1 && resultados[0].token === pin) {
-      connection.query('SELECT * FROM usuarios WHERE email = ?', email, function(error, results) { 
+      connection.query('SELECT * FROM usuarios WHERE email = ?', email, function (error, results) {
         if (error) {
           console.error(error);
           res.status(500).json({ error: "Ha ocurrido un error al consultar en usuarios" });
@@ -140,33 +140,33 @@ router.post('/recuperar-password-paso2', (req, res) => {
                 return;
               }
               // Agregar el hash al array values
-        
-                connection.query('UPDATE usuarios SET password = ? WHERE id = ?', [hash,results[0].id], function(error, results) {
-                  if (error) {
-                    console.error(error);
-                    res.status(500).json({ error: "Ha ocurrido un error actualizando usuario" });
-                    return;
-                  } else {
-    
-                    res.status(200).json({ message: "Datos Actualizados Exitosamente!"});
-                  }
-          
-                });
-        
-              
+
+              connection.query('UPDATE usuarios SET password = ? WHERE id = ?', [hash, results[0].id], function (error, results) {
+                if (error) {
+                  console.error(error);
+                  res.status(500).json({ error: "Ha ocurrido un error actualizando usuario" });
+                  return;
+                } else {
+
+                  res.status(200).json({ message: "Datos Actualizados Exitosamente!" });
+                }
+
+              });
+
+
             });
           }
           hashpassword();
-    
-          
+
+
         } else {
           res.status(403).json({ message: "El email no esta en el sistema" });
-    
+
         }
-    
+
       });
 
-    } else{
+    } else {
       res.status(403).json({ error: "El PIN ha caducado o es incorrecto" });
     }
 
@@ -257,7 +257,7 @@ router.put('/actualizar-usuarios/:id', (req, res) => {
       emailHandle();
       req.session.user.username = username;
       res.status(200).json({ message: "Datos Actualizados Exitosamente!", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
-      
+
     });
   }
 
@@ -339,7 +339,7 @@ router.get('/verificar-email/:email', (req, res) => {
         }
       });
       res.status(200).json({ message: "Correo de Verificacion Enviado" });
-      
+
     });
 
   } else {
@@ -347,6 +347,24 @@ router.get('/verificar-email/:email', (req, res) => {
   }
 
 
+});
+
+router.get('/avatar/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+console.log(id);
+  connection.query('SELECT * FROM avatar_users WHERE user_id = ?', id, function (error, result) {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: "Ha ocurrido un error consultando los avatar" });
+      return;
+    }
+    if (result.length === 1) {
+      res.status(200).json({ message: "avatar encontrado", avatar: result[0].avatar });
+    }else {
+      res.status(401).json({ error: "el usuario no tiene un avatar" });
+    }
+
+  });
 });
 
 
