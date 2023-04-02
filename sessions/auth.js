@@ -181,7 +181,7 @@ router.get('/verificar-correo/:token', (req, res) => {
 
   connection.query(query, [token, 'role'], (error, results) => {
     if (error) {
-      
+
       res.status(500).json({ message: "Ha ocurrido un error al verificar el correo" });
 
       //buscamos en correo en la tabla de usuarios
@@ -190,9 +190,9 @@ router.get('/verificar-correo/:token', (req, res) => {
       const query2 = "SELECT * FROM usuarios WHERE email = ?";
       connection.query(query2, email, (error, results) => {
         if (error) {
-          
+
           res.status(500).json({ message: "Ha ocurrido un error al consultar el correo en los usuarios" });
-    
+
           // agregamos el rol de verificado al usuario
         } else {
           const id = results[0].id;
@@ -207,26 +207,26 @@ router.get('/verificar-correo/:token', (req, res) => {
               return;
 
               // borramos el token pues ya fue verificado
-            }else {
+            } else {
               connection.query('DELETE FROM temp_token_pool WHERE user_email = ? AND type = ?', [email, 'role'], function (error, results, fields) {
                 if (error) {
                   console.error(error);
                   res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
                   return;
-                }else {
+                } else {
                   //enviamos la respuesta al cliente
                   res.status(200).json({ message: "Correo verificado exitosamente" });
-    
+
                 }
               });
             }
           });
 
         }
-    
+
       });
 
-    }else if (results.length === 0){
+    } else if (results.length === 0) {
       res.status(403).json({ message: "El email ya ha sido verificado" });
     }
 

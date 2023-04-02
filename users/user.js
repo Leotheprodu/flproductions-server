@@ -351,7 +351,6 @@ router.get('/verificar-email/:email', (req, res) => {
 
 router.get('/avatar/:id', (req, res) => {
   const id = parseInt(req.params.id);
-console.log(id);
   connection.query('SELECT * FROM avatar_users WHERE user_id = ?', id, function (error, result) {
     if (error) {
       console.error(error);
@@ -363,6 +362,22 @@ console.log(id);
     }else {
       res.status(401).json({ error: "el usuario no tiene un avatar" });
     }
+
+  });
+});
+
+router.post('/avatar-update', (req, res) => {
+  const { id, avatar } = req.body;
+  const datosDeAvatar = [avatar, id];
+  connection.query('UPDATE avatar_users SET avatar = ? WHERE user_id = ?', datosDeAvatar, function (error, result) {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: "Ha ocurrido un error actualizando el avatar" });
+      return;
+    }
+    
+      req.session.avatar = avatar;
+      res.status(200).json({ message: "avatar actualizado"});
 
   });
 });
