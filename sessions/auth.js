@@ -6,7 +6,7 @@ const connection = mysql.createConnection(credentials);
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const ejs = require('ejs');
-const transporter = require("../database/emailcred");
+const transporter = require("../email_config/transporter");
 const crypto = require('crypto');
 
 

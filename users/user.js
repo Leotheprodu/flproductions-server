@@ -6,8 +6,9 @@ const connection = mysql.createConnection(credentials);
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const ejs = require('ejs');
-const transporter = require("../database/emailcred");
+const transporter = require("../email_config/transporter");
 const crypto = require('crypto');
+const emailRateLimit = require("../email_config/emailRateLimit");
 
 
 
@@ -42,9 +43,9 @@ router.get('/usuarios/:id', (req, res) => {
     res.status(401).json({ message: "No tienes permiso para acceder a este recurso." });
   }
 
-});
+}); // seguridad: para conectarse el suario debe estar logueado
 
-router.post('/recuperar-password', (req, res) => {
+router.post('/recuperar-password', emailRateLimit, (req, res) => {
   const { email } = req.body;
   const token = crypto.randomBytes(6).toString('hex');// Genera un token aleatorio de 32 caracteres
   const newTempToken = {
@@ -104,7 +105,7 @@ router.post('/recuperar-password', (req, res) => {
       });
 
     } else {
-      res.status(403).json({ message: "El email no esta en el sistema" });
+      res.status(404).json({ message: "El email no esta en el sistema" });
 
     }
 
@@ -112,7 +113,8 @@ router.post('/recuperar-password', (req, res) => {
 
 
 
-});
+}); // seguridad: envio de correos limitado
+
 router.post('/recuperar-password-paso2', (req, res) => {
   const { email, password, pin } = req.body;
 
@@ -139,7 +141,7 @@ router.post('/recuperar-password-paso2', (req, res) => {
                 res.status(500).json({ error: "Ha ocurrido un error con el password" });
                 return;
               }
-              // Agregar el hash al array values
+        
 
               connection.query('UPDATE usuarios SET password = ? WHERE id = ?', [hash, results[0].id], function (error, results) {
                 if (error) {
@@ -160,21 +162,21 @@ router.post('/recuperar-password-paso2', (req, res) => {
 
 
         } else {
-          res.status(403).json({ message: "El email no esta en el sistema" });
+          res.status(404).json({ message: "El email no esta en el sistema" });
 
         }
 
       });
 
     } else {
-      res.status(403).json({ error: "El PIN ha caducado o es incorrecto" });
+      res.status(404).json({ error: "El PIN ha caducado o es incorrecto" });
     }
 
   });
 
-});
+}); // seguridad: el pin enviado al correo del usuario esla seguridad
 
-router.put('/actualizar-usuarios/:id', (req, res) => {
+router.put('/actualizar-usuarios/:id', emailRateLimit, (req, res) => {
 
   const id = parseInt(req.params.id);
   const { username, email, password } = req.body;
@@ -247,18 +249,23 @@ router.put('/actualizar-usuarios/:id', (req, res) => {
     // Agregar la cláusula WHERE a la cadena SQL
     sql += ' WHERE id = ?';
     values.push(id);
+    
+    if (req.session.isLoggedIn) {
 
-    connection.query(sql, values, (error, resultado) => {
-      if (error) {
-        console.error('Error al actualizar los datos: ', error);
-        res.status(500).send('Error al actualizar los datos');
-        return;
-      }
-      emailHandle();
-      req.session.user.username = username;
-      res.status(200).json({ message: "Datos Actualizados Exitosamente!", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
-
-    });
+      connection.query(sql, values, (error, resultado) => {
+        if (error) {
+          console.error('Error al actualizar los datos: ', error);
+          res.status(500).send('Error al actualizar los datos');
+          return;
+        }
+        emailHandle();
+        req.session.user.username = username;
+        res.status(200).json({ message: "Datos Actualizados Exitosamente!", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
+  
+      });
+    } else{
+      res.status(403).send('debe haber iniciado session');
+    }
   }
 
   const hashpassword = async () => {
@@ -296,9 +303,9 @@ router.put('/actualizar-usuarios/:id', (req, res) => {
 
   UpdateBD();
 
-});
+}); // seguridad: solo usuarios con session inciada puede usar este endpoint
 
-router.get('/verificar-email/:email', (req, res) => {
+router.get('/verificar-email/:email', emailRateLimit, (req, res) => {
   const username = req.session.user.username;
   const email = req.params.email;
   const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
@@ -343,11 +350,11 @@ router.get('/verificar-email/:email', (req, res) => {
     });
 
   } else {
-    res.status(401).json({ error: "Debes haber iniciado sesion" });
+    res.status(401).json({ error: "Ya has verificado tu email" });
   }
 
 
-});
+}); // seguridad: envio de correos limitado
 
 router.get('/avatar/:id', (req, res) => {
   const id = parseInt(req.params.id);
