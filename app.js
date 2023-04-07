@@ -1,4 +1,5 @@
 /* DEPENDENCIAS */
+require('dotenv').config({ override: true })
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
@@ -8,7 +9,6 @@ const MySQLStore = require('express-mysql-session')(session);
 const mysql2 = require("mysql2/promise");
 const connection2 = mysql2.createPool(credentials);
 const sessionStore = new MySQLStore({}/* session store options */, connection2);
-
 const authRouter = require("./sessions/auth");
 const userRouter = require("./users/user");
 const artistasRouter = require("./music_app/artistas");

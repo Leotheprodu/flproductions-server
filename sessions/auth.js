@@ -214,8 +214,21 @@ router.get('/verificar-correo/:token', (req, res) => {
                   res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
                   return;
                 } else {
-                  //enviamos la respuesta al cliente
-                  res.status(200).json({ message: "Correo verificado exitosamente" });
+                  const AvatarInfo = {
+                    user_id: id,
+                    avatar: 8
+                  }
+                  connection.query('INSERT INTO avatar_users SET ?', AvatarInfo, function (error, results, fields) {
+                    if (error) {
+                      console.error(error);
+                      res.status(500).json({ error: "Ha ocurrido un error al guardar el avatar en la BD" });
+                      return;
+                    }
+                    
+                    //enviamos la respuesta al cliente
+                    res.status(200).json({ message: "Correo verificado exitosamente" });
+                  });
+        
 
                 }
               });

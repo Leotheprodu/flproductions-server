@@ -1,9 +1,9 @@
 
 const credentials={
   host:'localhost',
-  user: process.env.DB_USER || 'root',
-  password:process.env.DB_PASS || 'Lsound2022',
-  database: process.env.DB_DB || 'flproductions'
+  user: process.env.DB_USER,
+  password:process.env.DB_PASS,
+  database: process.env.DB_DB
 }
 
   module.exports = credentials;

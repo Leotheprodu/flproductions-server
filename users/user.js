@@ -360,7 +360,7 @@ router.get('/avatar/:id', (req, res) => {
     if (result.length === 1) {
       res.status(200).json({ message: "avatar encontrado", avatar: result[0].avatar });
     }else {
-      res.status(401).json({ error: "el usuario no tiene un avatar" });
+      res.status(200).json({ message: "avatar encontrado", avatar: 8 });
     }
 
   });
@@ -375,11 +375,29 @@ router.post('/avatar-update', (req, res) => {
       res.status(500).json({ error: "Ha ocurrido un error actualizando el avatar" });
       return;
     }
-    
+    if (result.changedRows === 1) {
       req.session.avatar = avatar;
       res.status(200).json({ message: "avatar actualizado"});
 
+    }else{
+      res.status(401).json({ message: "solo usuarios registrados pueden cambiar su avatar" });
+    }
+
   });
+});
+
+router.get('/mensajes-generales', (req, res) => {
+
+connection.query('SELECT * FROM mensajes_generales', function (error, result) {
+  if (error) {
+    console.error(error);
+    res.status(500).json({ error: "Ha ocurrido un error actualizando el avatar" });
+    return;
+  } else{
+    res.status(200).json(result);
+  }
+});
+
 });
 
 
