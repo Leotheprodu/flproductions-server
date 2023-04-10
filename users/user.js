@@ -9,7 +9,9 @@ const ejs = require('ejs');
 const transporter = require("../email_config/transporter");
 const crypto = require('crypto');
 const emailRateLimit = require("../email_config/emailRateLimit");
+const rateLimit = require("../sessions/rate-limit");
 
+router.use("/signup", rateLimit);
 
 
 
@@ -418,7 +420,7 @@ router.get('/mensajes-generales', (req, res) => {
 
 }); //seguridad: aun no se me ocurre, porque  estos mensajes son muy generales y hay para todo publico
 
-router.post("/signup", (req, res) => {
+router.post("/signup", emailRateLimit, (req, res) => {
 
   const { email, password, username, fecha_creacion } = req.body;
   const query = "SELECT * FROM usuarios WHERE email = ?";
@@ -506,7 +508,7 @@ router.post("/signup", (req, res) => {
   });
 
 
-}); 
+}); //seguridad: limitado a 5 intentos por ip, ademas limitado los correos enviados para que no envien mas de 1 por minuto
 
 router.get('/verificar-correo/:token', (req, res) => {
   const token = req.params.token;
@@ -573,7 +575,7 @@ router.get('/verificar-correo/:token', (req, res) => {
       });
 
     } else if (results.length === 0) {
-      res.status(403).json({ message: "El email ya ha sido verificado" });
+      res.status(403).json({ message: "El email ya ha sido verificado o debes volver a enviar un correo de verificacion" });
     }
 
   });
@@ -581,5 +583,5 @@ router.get('/verificar-correo/:token', (req, res) => {
 
 
 
-});
+}); //seguridad: por si solo ya tiene una seguridad buena, pues solo si se tiene el token se puede hacer uso de esta api
 module.exports = router;
