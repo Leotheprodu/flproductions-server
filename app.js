@@ -3,15 +3,12 @@ require('dotenv').config({ override: true })
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
-const credentials = require("./database/dbconnections");
+const credentials = require("./config/credentials");
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const mysql2 = require("mysql2/promise");
 const connection2 = mysql2.createPool(credentials);
 const sessionStore = new MySQLStore({}/* session store options */, connection2);
-const authRouter = require("./sessions/auth");
-const userRouter = require("./users/user");
-const artistasRouter = require("./music_app/artistas");
 
 const PUERTO = process.env.PORT || 5000;
 const app = express();
@@ -45,9 +42,7 @@ if (app.get('env') === 'production') {
 
 app.use(session(sess));
 
-app.use('/api', authRouter);
-app.use('/api', userRouter);
-app.use('/api', artistasRouter);
+app.use('/api', require('./routes'));
 
 app.use(express.static(path.resolve(__dirname, '../app/dist')));
 

@@ -1,21 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const mysql = require("mysql2");
-const credentials = require("../database/dbconnections");
+const credentials = require("../config/credentials");
 const connection = mysql.createConnection(credentials);
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const ejs = require('ejs');
-const transporter = require("../email_config/transporter");
+const transporter = require("../config/nodemailer/transporter");
 const crypto = require('crypto');
-const emailRateLimit = require("../email_config/emailRateLimit");
-const rateLimit = require("../sessions/rate-limit");
+const emailRateLimit = require("../config/nodemailer/emailRateLimit");
+const rateLimit = require("../config/rate-limit");
 
 router.use("/signup", rateLimit);
 
 
 
-router.get('/usuarios/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   const id = parseInt(req.params.id);
   if (id === req.session.user.id && req.session.isLoggedIn) {
     const query = `SELECT * FROM usuarios WHERE id = ?`;
@@ -70,7 +70,7 @@ router.post('/recuperar-password', emailRateLimit, (req, res) => {
           res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
           return;
         }
-        ejs.renderFile(__dirname + '/recuperar-password.ejs', { token }, (error, data) => {
+        ejs.renderFile(__dirname + '../config/nodemailer/templates/user-recuperar-password.ejs', { token }, (error, data) => {
           if (error) {
             console.log(error);
             res.send(error);
@@ -326,7 +326,7 @@ router.get('/verificar-email/:email', emailRateLimit, (req, res) => {
         res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
         return;
       }
-      ejs.renderFile(__dirname + '/verificar_correo.ejs', { username, link }, (error, data) => {
+      ejs.renderFile(__dirname + '../config/nodemailer/templates/user-verificar_correo.ejs', { username, link }, (error, data) => {
         if (error) {
           console.log(error);
           res.send(error);
@@ -476,7 +476,7 @@ router.post("/signup", emailRateLimit, (req, res) => {
           res.status(200).json({ message: "Usuario creado con éxito" });
 
           // Renderiza la plantilla con la variable del enlace
-          ejs.renderFile(__dirname + '/sign_up.ejs', { username, link }, (error, data) => {
+          ejs.renderFile(__dirname + '../config/nodemailer/templates/user-sign_up.ejs', { username, link }, (error, data) => {
             if (error) {
               console.log(error);
               res.send(error);

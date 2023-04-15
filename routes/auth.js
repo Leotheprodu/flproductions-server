@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const mysql = require("mysql2");
-const credentials = require("../database/dbconnections");
+const credentials = require("../config/credentials");
 const connection = mysql.createConnection(credentials);
 const bcrypt = require('bcrypt');
-const rateLimit = require("./rate-limit");
+const rateLimit = require("../config/rate-limit");
 
 router.use("/login", rateLimit);
 
