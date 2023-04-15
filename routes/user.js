@@ -15,7 +15,7 @@ router.use("/signup", rateLimit);
 
 
 
-router.get('/:id', (req, res) => {
+router.get('/user:id', (req, res) => {
   const id = parseInt(req.params.id);
   if (id === req.session.user.id && req.session.isLoggedIn) {
     const query = `SELECT * FROM usuarios WHERE id = ?`;
@@ -42,7 +42,7 @@ router.get('/:id', (req, res) => {
       }
     });
   } else {
-    res.status(401).json({ message: "No tienes permiso para acceder a este recurso." });
+    res.status(401).json({ message: "No tienes permiso para acceder a este recurso..." });
   }
 
 }); // seguridad: para conectarse el suario debe estar logueado
@@ -217,7 +217,7 @@ router.put('/update-users/:id', emailRateLimit, (req, res) => {
           res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
           return;
         }
-        ejs.renderFile(__dirname + '/verificar_correo.ejs', { username, link }, (error, data) => {
+        ejs.renderFile(__dirname + '../config/nodemailer/templates/user-verificar_correo.ejs', { username, link }, (error, data) => {
           if (error) {
             console.log(error);
             res.send(error);
@@ -406,15 +406,20 @@ router.post('/avatar-update', (req, res) => {
   }
 }); //seguridad: debe estar logueado y el id proporcionado deber ser el mismo de la sesion del usuario
 
-router.get('/general-messages', (req, res) => {
+router.get('/system-messages', (req, res) => {
 
   connection.query('SELECT * FROM mensajes_generales', function (error, result) {
     if (error) {
       console.error(error);
-      res.status(500).json({ error: "Ha ocurrido un error actualizando el avatar" });
+      res.status(500).json({ message: "Ha ocurrido un error actualizando el avatar" });
       return;
     } else {
-      res.status(200).json(result);
+      console.log(result);
+      if (result.length >= 1) {
+        res.status(200).json(result);
+      } else {
+        res.status(401).json({ message: "No hay mensajes" });
+      }
     }
   });
 

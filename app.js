@@ -5,7 +5,6 @@ const express = require("express");
 const cors = require("cors");
 const credentials = require("./config/credentials");
 const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
 const mysql2 = require("mysql2/promise");
 const connection2 = mysql2.createPool(credentials);
 const sessionStore = new MySQLStore({}/* session store options */, connection2);
@@ -22,7 +21,7 @@ const sess = {
 }
 
 app.use(cors({
-  origin: "http://localhost:3000", // use your actual domain name (or localhost), using * is not recommended
+  origin: process.env.LINK_DEV_HOST, // use your actual domain name (or localhost), using * is not recommended
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
   credentials: true
