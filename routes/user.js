@@ -47,7 +47,7 @@ router.get('/:id', (req, res) => {
 
 }); // seguridad: para conectarse el suario debe estar logueado
 
-router.post('/recuperar-password', emailRateLimit, (req, res) => {
+router.post('/recover-password', emailRateLimit, (req, res) => {
   const { email } = req.body;
   const token = crypto.randomBytes(6).toString('hex');// Genera un token aleatorio de 32 caracteres
   const newTempToken = {
@@ -117,7 +117,7 @@ router.post('/recuperar-password', emailRateLimit, (req, res) => {
 
 }); // seguridad: envio de correos limitado
 
-router.post('/recuperar-password-paso2', (req, res) => {
+router.post('/recover-password_step2', (req, res) => {
   const { email, password, pin } = req.body;
 
   connection.query('SELECT * FROM temp_token_pool WHERE token = ?', pin, function (err, resultados) {
@@ -178,12 +178,12 @@ router.post('/recuperar-password-paso2', (req, res) => {
 
 }); // seguridad: el pin enviado al correo del usuario esla seguridad
 
-router.put('/actualizar-usuarios/:id', emailRateLimit, (req, res) => {
+router.put('/update-users/:id', emailRateLimit, (req, res) => {
 
   const id = parseInt(req.params.id);
   const { username, email, password } = req.body;
   const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
-  const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5000/'}api/verificar-correo/${token}`;
+  const link = `${process.env.NODE_ENV === 'production' ? process.env.LINK_PROD_HOST : process.env.LINK_DEV_HOST}/verificar-email/${token}`;
   const newTempToken = {
     token: token,
     user_email: email,
@@ -307,11 +307,11 @@ router.put('/actualizar-usuarios/:id', emailRateLimit, (req, res) => {
 
 }); // seguridad: solo usuarios con session inciada puede usar este endpoint
 
-router.get('/verificar-email/:email', emailRateLimit, (req, res) => {
+router.get('/verify-email/:email', emailRateLimit, (req, res) => {
   const username = req.session.user.username;
   const email = req.params.email;
   const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
-  const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5173/'}verificar-email/${token}`;
+  const link = `${process.env.NODE_ENV === 'production' ? process.env.LINK_PROD_HOST : process.env.LINK_DEV_HOST}/verificar-email/${token}`;
   const newTempToken = {
     token: token,
     user_email: email,
@@ -406,7 +406,7 @@ router.post('/avatar-update', (req, res) => {
   }
 }); //seguridad: debe estar logueado y el id proporcionado deber ser el mismo de la sesion del usuario
 
-router.get('/mensajes-generales', (req, res) => {
+router.get('/general-messages', (req, res) => {
 
   connection.query('SELECT * FROM mensajes_generales', function (error, result) {
     if (error) {
@@ -426,7 +426,7 @@ router.post("/signup", emailRateLimit, (req, res) => {
   const query = "SELECT * FROM usuarios WHERE email = ?";
   const values = [email];
   const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
-  const link = `${process.env.NODE_ENV === 'production' ? 'https://flproductionscr.com/' : 'http://localhost:5173/'}verificar-email/${token}`;
+  const link = `${process.env.NODE_ENV === 'production' ? process.env.LINK_PROD_HOST : process.env.LINK_DEV_HOST}/verificar-email/${token}`;
   const newTempToken = {
     token: token,
     user_email: email,
@@ -510,7 +510,7 @@ router.post("/signup", emailRateLimit, (req, res) => {
 
 }); //seguridad: limitado a 5 intentos por ip, ademas limitado los correos enviados para que no envien mas de 1 por minuto
 
-router.get('/verificar-correo/:token', (req, res) => {
+router.get('/email-verification/:token', (req, res) => {
   const token = req.params.token;
   const query = "SELECT * FROM temp_token_pool WHERE token = ? AND type = ?";
 

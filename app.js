@@ -44,21 +44,6 @@ app.use(session(sess));
 
 app.use('/api', require('./routes'));
 
-app.use(express.static(path.resolve(__dirname, '../app/dist')));
-
-// Manejar las peticiones GET en la ruta /api
-app.get("/api", (req, res) => {
-  res.redirect("/");
-  
-});
-
-// Todas las peticiones GET que no hayamos manejado retornaran nuestro app React
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../app/dist', 'index.html'));
-});
-
-
-
 const server = app.listen(PUERTO, () => {
 console.log(`El servidor esta escuchando en el puerto ${PUERTO}...`);
 
