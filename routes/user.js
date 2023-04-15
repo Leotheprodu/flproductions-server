@@ -15,8 +15,9 @@ router.use("/signup", rateLimit);
 
 
 
-router.get('/user:id', (req, res) => {
+router.get('/user/:id', (req, res) => {
   const id = parseInt(req.params.id);
+  console.log(req.session.user.id)
   if (id === req.session.user.id && req.session.isLoggedIn) {
     const query = `SELECT * FROM usuarios WHERE id = ?`;
     const values = [id];
@@ -414,7 +415,6 @@ router.get('/system-messages', (req, res) => {
       res.status(500).json({ message: "Ha ocurrido un error actualizando el avatar" });
       return;
     } else {
-      console.log(result);
       if (result.length >= 1) {
         res.status(200).json(result);
       } else {

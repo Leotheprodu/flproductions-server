@@ -7,6 +7,7 @@ const credentials = require("./config/credentials");
 const session = require('express-session');
 const mysql2 = require("mysql2/promise");
 const connection2 = mysql2.createPool(credentials);
+const MySQLStore = require('express-mysql-session')(session);
 const sessionStore = new MySQLStore({}/* session store options */, connection2);
 
 const PUERTO = process.env.PORT || 5000;
