@@ -20,7 +20,8 @@
     "express-session": "^1.17.3",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
-    "nodemailer": "^6.9.1"
+    "nodemailer": "^6.9.1",
+    "sequelize": "^6.31.0"
   },
   "author": "LeotheProdu",
   "license": "ISC",

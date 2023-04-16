@@ -1,21 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const { getItems } = require("../controllers/artistas");
 const mysql = require("mysql2");
 const credentials = require("../config/credentials")
 const connection = mysql.createConnection(credentials);
 
+router.get("/", getItems);
 
 
-router.get("/", (req, res) => {
-    connection.query('SELECT * FROM artistas', (error, result) =>{
-      if(error) {
-        res.status(500).send(error);
-      }else {
-        res.status(200).json({ artistas: result });
-      }
-    });
-  
-  });
   router.get("/producciones", (req, res) => {
     connection.query('SELECT producciones.*, artistas.nombre_artista, artistas.instagram, artistas.imagen FROM producciones INNER JOIN artistas ON producciones.id_artista = artistas.id ORDER BY producciones.fecha_lanzamiento DESC', (error, result) =>{
       if(error) {

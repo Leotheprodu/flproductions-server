@@ -9,6 +9,8 @@ const mysql2 = require("mysql2/promise");
 const connection2 = mysql2.createPool(credentials);
 const MySQLStore = require('express-mysql-session')(session);
 const sessionStore = new MySQLStore({}/* session store options */, connection2);
+const { dbConnectMySql } = require('./config/mysql');
+const ENGINE_DB = process.env.ENGINE_DB;
 
 const PUERTO = process.env.PORT || 5000;
 const app = express();
@@ -50,3 +52,6 @@ console.log(`El servidor esta escuchando en el puerto ${PUERTO}...`);
 });
 
 server.timeout = 30000;
+
+/* (ENGINE_DB === 'sql') ? dbConnectMySql() : dbConnectNoSql(); */
+dbConnectMySql();
