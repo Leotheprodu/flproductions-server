@@ -4,7 +4,10 @@
   "private": true,
   "version": "1.0.0",
   "proxy": "http://localhost:5173",
-  "scripts": {},
+  "scripts": {
+    "start": "node ./app.js",
+    "dev": "nodemon ./app.js"
+  },
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
@@ -22,7 +25,7 @@
   "author": "LeotheProdu",
   "license": "ISC",
   "engines": {
-    "node": "18.11.0"
+    "node": "18.14.0"
   },
   "devDependencies": {
     "vite": "^4.1.4"
