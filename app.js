@@ -23,6 +23,8 @@ const sess = {
   cookie: { maxAge: 3600000 } // Configuramos una cookie segura y establecemos una expiración de 1 hora
 }
 
+
+
 app.use(cors({
   origin: process.env.LINK_DEV_HOST, // use your actual domain name (or localhost), using * is not recommended
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],

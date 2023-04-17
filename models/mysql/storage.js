@@ -20,7 +20,8 @@ const Storage = sequelize.define(
 
     },
     {
-        timestamps: false,
+        tableName: 'storage',
+        timestamps: false
     });
 
 module.exports = Storage;
