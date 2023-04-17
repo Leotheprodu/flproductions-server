@@ -1,7 +1,7 @@
 const { artistasModel } = require('../models');
 
 const mysql = require("mysql2");
-const credentials = require("../config/credentials")
+const credentials = require("../config/credentials");
 const connection = mysql.createConnection(credentials);
 /**
  * Obtener la base de datos!
@@ -16,7 +16,7 @@ const getItems = async (req, res) => {
 
     }catch(error) {
         console.error(error);
-        res.status(500).send('Error al cargar artistas')
+        res.status(500).send({message: 'Error al cargar los artistas', error})
     }
     /* connection.query('SELECT * FROM artistas', (error, result) => {
         if (error) {
@@ -43,8 +43,16 @@ const getItem = (req, res) => {
  * @param {*} res
 
 */
-const createItem = (req, res) => {
+const createItem = async (req, res) => {
+    const { body } = req
+    try {
+        const artista = await artistasModel.create(body);
+        res.status(200).send({ artista });
 
+    }catch(error) {
+        console.error(error);
+        res.status(500).send({message: 'Error al crear el artista', error})
+    }
 }
 
 /**

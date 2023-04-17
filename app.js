@@ -31,6 +31,9 @@ app.use(cors({
 }))
 
 app.use(express.json());
+app.use(express.static('storage'));
+app.use(session(sess));
+
 
 app.use((err, req, res, next) => {
   res.status(500).send('Ocurrió un error en el servidor');
@@ -41,9 +44,6 @@ if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
 }
-
-app.use(session(sess));
-
 app.use('/api', require('./routes'));
 
 const server = app.listen(PUERTO, () => {
