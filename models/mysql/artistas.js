@@ -1,6 +1,7 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 
+
 const Artistas = sequelize.define(
     'artistas',
     {

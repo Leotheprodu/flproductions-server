@@ -1,4 +1,6 @@
+const { matchedData } = require('express-validator');
 const { artistasModel } = require('../models');
+const { handleHttpError } = require('../utils/handleError');
 
 /**
  * Obtener la base de datos!
@@ -11,17 +13,10 @@ const getItems = async (req, res) => {
         const artistas = await artistasModel.findAll();
         res.status(200).send({ artistas });
 
-    }catch(error) {
+    } catch (error) {
         console.error(error);
-        res.status(500).send({message: 'Error al cargar los artistas', error})
+        handleHttpError(res, 'Error al cargar los artistas');
     }
-    /* connection.query('SELECT * FROM artistas', (error, result) => {
-        if (error) {
-            res.status(500).send(error);
-        } else {
-            res.status(200).json({ artistas: result });
-        }
-    }); */
 }
 
 /**
@@ -30,8 +25,16 @@ const getItems = async (req, res) => {
  * @param {*} res
 
 */
-const getItem = (req, res) => {
+const getItem = async (req, res) => {
+    try {
+    
+        const { id } = matchedData(req);
+        const artista = await artistasModel.findByPk(id);
+        res.status(200).send({ artista });
 
+    } catch (error) {
+        handleHttpError(res, 'Error al cargar el artista');
+    }
 }
 
 /**
@@ -41,14 +44,15 @@ const getItem = (req, res) => {
 
 */
 const createItem = async (req, res) => {
-    const { body } = req
+
     try {
+        const body = matchedData(req);
         const artista = await artistasModel.create(body);
         res.status(200).send({ artista });
 
-    }catch(error) {
+    } catch (error) {
         console.error(error);
-        res.status(500).send({message: 'Error al crear el artista', error})
+        handleHttpError(res, 'Error al crear el artista');
     }
 }
 
@@ -58,8 +62,22 @@ const createItem = async (req, res) => {
  * @param {*} res
 
 */
-const updateItem = (req, res) => {
+const updateItem = async (req, res) => {
+    try {
+        const { id, ...body } = matchedData(req);
 
+        const artista = await artistasModel.findByPk(id); // buscar la instancia por su identificador
+        if (!artista) {
+            return  handleHttpError(res, 'Artista no encontrado', 404);
+        }
+
+        await artista.update(body); // actualizar la instancia
+        res.status(200).send({ artista });
+
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al actualizar el artista');
+    }
 }
 
 /**
@@ -68,8 +86,20 @@ const updateItem = (req, res) => {
  * @param {*} res
 
 */
-const deleteItem = (req, res) => {
+const deleteItem = async (req, res) => {
+    try {
+        const { id } = matchedData(req);
+        const artista = await artistasModel.findByPk(id);
+        if (!artista) {
+            return  handleHttpError(res, 'Artista no encontrado', 404);
+        }
 
+        await artista.destroy();
+        res.status(200).send({ message: 'Artista eliminado correctamente' });
+
+    } catch (error) {
+        handleHttpError(res, 'Error al cargar el artista');
+    }
 }
 
 module.exports = { getItems, getItem, createItem, updateItem, deleteItem };
