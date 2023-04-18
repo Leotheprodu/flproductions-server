@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const { getItems, createItem } = require("../controllers/artistas");
 const mysql = require("mysql2");
-const credentials = require("../config/credentials")
+const credentials = require("../config/credentials");
+const { validatorCreateItem } = require("../validators/artistas");
 const connection = mysql.createConnection(credentials);
 
 router.get("/", getItems);
-router.post("/", createItem);
+router.post("/", validatorCreateItem, createItem);
 
 
   router.get("/producciones", (req, res) => {

@@ -1,8 +1,5 @@
 const { artistasModel } = require('../models');
 
-const mysql = require("mysql2");
-const credentials = require("../config/credentials");
-const connection = mysql.createConnection(credentials);
 /**
  * Obtener la base de datos!
  * @param {*} req
