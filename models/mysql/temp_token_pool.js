@@ -1,37 +1,33 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 
-const Usuarios = sequelize.define(
-    'usuarios',
+const Temp_token_pool = sequelize.define(
+    'temp_token_pool',
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.SMALLINT,
             primaryKey: true,
             autoIncrement: true,
             allowNull: false,
         },
-        username: {
-            type: DataTypes.STRING,
-        },
-        email: {
+        user_email: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        password: {
+        token: {
             type: DataTypes.STRING,
             allowNull: false,
             select:false,
         },
-        fecha_creacion: {
-            type: DataTypes.DATE,
-
-        },ultima_actualizacion: {
-            type: DataTypes.TIME,
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false,
         }
 
     },
     {
         timestamps: false,
+        tableName: 'temp_token_pool'
     });
 
-module.exports = Usuarios;
+module.exports = Temp_token_pool;

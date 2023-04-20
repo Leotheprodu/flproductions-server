@@ -26,6 +26,7 @@ const getItems = async (req, res) => {
 
 */
 const getItem = async (req, res) => {
+    
     try {
     
         const { id } = matchedData(req);

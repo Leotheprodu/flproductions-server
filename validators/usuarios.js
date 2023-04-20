@@ -10,17 +10,12 @@ const validatorCreateItem = [
     check('email')
     .exists()
     .notEmpty()
-    .isString(),
+    .isEmail(),
 
     check('password')
     .exists()
     .notEmpty()
     .isString(),
-
-    check('fecha_creacion')
-    .exists()
-    .notEmpty()
-    .isDate(),
     
     (req, res, next) => validateResults(req, res, next)
     

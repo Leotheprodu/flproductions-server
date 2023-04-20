@@ -17,10 +17,10 @@ router.post("/login", (req, res) => {
   const query = "SELECT * FROM usuarios WHERE email = ?";
   const values = [email];
 
-  if (req.session.blockedUntil && req.session.blockedUntil > Date.now()) {
+  /* if (req.session.blockedUntil && req.session.blockedUntil > Date.now()) {
     
     return;
-  }
+  } */
   // Ejecutamos la consulta preparada con los valores de los marcadores de posición
   connection.query(query, values, (error, results) => {
     if (error) {
