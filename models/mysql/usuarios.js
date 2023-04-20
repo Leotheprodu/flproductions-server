@@ -1,27 +1,31 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 
-const Storage = sequelize.define(
-    'storage',
+const Usuarios = sequelize.define(
+    'usuarios',
     {
         id: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             primaryKey: true,
+            autoIncrement: true,
             allowNull: false,
         },
-        url: {
+        username: {
             type: DataTypes.STRING,
         },
-        filename: {
+        email: {
             type: DataTypes.STRING,
         },
-        originalname: {
+        password: {
             type: DataTypes.STRING,
+        },
+        fecha_creacion: {
+            type: DataTypes.DATE,
         }
 
     },
     {
-        tableName: 'storage',
+        timestamps: false,
     });
 
-module.exports = Storage;
+module.exports = Usuarios;

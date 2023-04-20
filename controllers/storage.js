@@ -1,13 +1,25 @@
+const fs = require('fs');
+const { matchedData } = require('express-validator');
 const { storageModel } = require('../models');
+const { handleHttpError } = require('../utils/handleError');
+
 const PUBLIC_URL = (process.env.NODE_ENV === 'production') ? process.env.PUBLIC_URL_PROD : process.env.PUBLIC_URL_DEV 
+const MEDIA_PATH = `${__dirname}/../storage`;
 /**
  * Obtener la base de datos!
  * @param {*} req
  * @param {*} res
 
 */
-const getItems = (req, res) => {
+const getItems = async (req, res) => {
+    try {
+        const data = await storageModel.findAll();
+        res.status(200).send({ data });
 
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al cargar los archivos');
+    }
 }
 
 /**
@@ -16,8 +28,16 @@ const getItems = (req, res) => {
  * @param {*} res
 
 */
-const getItem = (req, res) => {
+const getItem = async (req, res) => {
+    try {
+        const { id } = matchedData(req)
+        const data = await storageModel.findByPk(id);
+        res.status(200).send({ data });
 
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error con el detalle del item');
+    }
 }
 
 /**
@@ -32,10 +52,12 @@ const createItem = async (req, res) => {
         const { file } = req
 
         const fileData = {
+            id: file.filename.split('.').shift(),
             filename: file.filename,
-            url:`${PUBLIC_URL}/${file.filename}`
+            url:`${PUBLIC_URL}/${file.filename}`,
+            originalname: file.originalname.split('.').shift()
 
-        }
+        };
 
         const data = await storageModel.create(fileData);
 
@@ -43,28 +65,35 @@ const createItem = async (req, res) => {
 
     }catch(error) {
         console.error(error);
-        res.status(500).send({message: 'Error al guardar registro', error})
+        handleHttpError(res, 'Error al guardar registro de archivo');
     }
 }
-
-/**
- * Actualizar un registro!
- * @param {*} req
- * @param {*} res
-
-*/
-const updateItem = (req, res) => {
-
-}
-
 /**
  * Eliminar un registro!
  * @param {*} req
  * @param {*} res
 
 */
-const deleteItem = (req, res) => {
-
+const deleteItem = async (req, res) => {
+    try {
+        const { id } = matchedData(req)
+        const dataFile = await storageModel.findByPk(id);
+        if (!dataFile) {
+            return  handleHttpError(res, 'id no encontrado');
+        } else{
+            const { filename } = dataFile;
+            const filePath = `${MEDIA_PATH}/${filename}`;
+            const data = { filePath, deleted: 1 };
+            fs.unlinkSync(filePath);
+            await dataFile.destroy();
+            res.status(200).send({ data });
+        }
+        
+        
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al intentar eliminar el archivo');
+    }
 }
 
-module.exports = { getItems, getItem, createItem, updateItem, deleteItem };
+module.exports = { getItems, getItem, createItem, deleteItem };

@@ -1,3 +1,8 @@
+/* const { matchedData } = require('express-validator'); */
+const { usuariosModel } = require('../models');
+const { handleHttpError } = require('../utils/handleError');
+
+
 /**
  * Obtener la base de datos!
  * @param {*} req
@@ -5,7 +10,14 @@
 
 */
 const getItems = async (req, res) => {
+    try {
+        const users = await usuariosModel.findAll();
+        res.status(200).send({ usuarios: users });
 
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al cargar los usuarios');
+    }
 }
 
 /**

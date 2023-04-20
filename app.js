@@ -1,6 +1,5 @@
 /* DEPENDENCIAS */
 require('dotenv').config({ override: true })
-const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const credentials = require("./config/credentials");
