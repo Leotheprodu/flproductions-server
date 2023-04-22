@@ -38,4 +38,8 @@ const Artistas = sequelize.define(
         timestamps: false,
     });
 
+    /**
+     * Implementando Modelo Personalizado
+     */
+
 module.exports = Artistas;

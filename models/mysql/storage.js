@@ -11,12 +11,24 @@ const Storage = sequelize.define(
         },
         url: {
             type: DataTypes.STRING,
+            allowNull: false,
         },
         filename: {
             type: DataTypes.STRING,
+            allowNull: false,
         },
         originalname: {
             type: DataTypes.STRING,
+            allowNull: false,
+        },
+        ext: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        user_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            
         }
 
     },
