@@ -10,13 +10,13 @@ const connection = mysql.createConnection(credentials);
 /* Lista los items */
 router.get("/", getItems);
 /* Obtener Item */
-router.get("/:id", validatorGetItem, getItem);
+router.get("/:id", validatorGetItem,checkRoles([3,4,5]), getItem);
 /* Crea un registro */
 router.post("/", validatorCreateItem, checkRoles([3,4,5]), createItem);
 /* Actualiza un Registro */
-router.put("/:id",validatorGetItem, validatorCreateItem, updateItem);
+router.put("/:id",validatorGetItem, validatorCreateItem,checkRoles([3,4,5]), updateItem);
 /* Eliminar Item */
-router.delete("/:id", validatorGetItem, deleteItem);
+router.delete("/:id", validatorGetItem,checkRoles([5]), deleteItem);
 
 
   router.get("/producciones", (req, res) => {
