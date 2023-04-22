@@ -18,7 +18,6 @@ router.use("/signup", rateLimit);
 
 router.get('/user/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  console.log(req.session.user.id)
   if (id === req.session.user.id && req.session.isLoggedIn) {
     const query = `SELECT * FROM usuarios WHERE id = ?`;
     const values = [id];
@@ -72,7 +71,7 @@ router.post('/recover-password', emailRateLimit, (req, res) => {
           res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
           return;
         }
-        ejs.renderFile(__dirname + '../config/nodemailer/templates/user-recuperar-password.ejs', { token }, (error, data) => {
+        ejs.renderFile(__dirname + '/../config/nodemailer/templates/user-recuperar-password.ejs', { token }, (error, data) => {
           if (error) {
             console.log(error);
             res.send(error);
@@ -180,7 +179,7 @@ router.post('/recover-password_step2', (req, res) => {
 
 }); // seguridad: el pin enviado al correo del usuario esla seguridad
 
-router.put('/update-users/:id', emailRateLimit, (req, res) => {
+router.put('/update-users/:id', (req, res) => {
 
   const id = parseInt(req.params.id);
   const { username, email, password } = req.body;
@@ -219,7 +218,7 @@ router.put('/update-users/:id', emailRateLimit, (req, res) => {
           res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
           return;
         }
-        ejs.renderFile(__dirname + '../config/nodemailer/templates/user-verificar_correo.ejs', { username, link }, (error, data) => {
+        ejs.renderFile(__dirname + '/../config/nodemailer/templates/user-verificar_correo.ejs', { username, link }, (error, data) => {
           if (error) {
             console.log(error);
             res.send(error);
@@ -309,7 +308,7 @@ router.put('/update-users/:id', emailRateLimit, (req, res) => {
 
 }); // seguridad: solo usuarios con session inciada puede usar este endpoint
 
-router.get('/verify-email/:email', emailRateLimit, (req, res) => {
+router.get('/verify-email/:email', (req, res) => {
   const username = req.session.user.username;
   const email = req.params.email;
   const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
@@ -328,7 +327,7 @@ router.get('/verify-email/:email', emailRateLimit, (req, res) => {
         res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
         return;
       }
-      ejs.renderFile(__dirname + '../config/nodemailer/templates/user-verificar_correo.ejs', { username, link }, (error, data) => {
+      ejs.renderFile(__dirname + '/../config/nodemailer/templates/user-verificar_correo.ejs', { username, link }, (error, data) => {
         if (error) {
           console.log(error);
           res.send(error);
@@ -482,7 +481,7 @@ router.post("/signup", emailRateLimit, (req, res) => {
           res.status(200).json({ message: "Usuario creado con éxito" });
 
           // Renderiza la plantilla con la variable del enlace
-          ejs.renderFile(__dirname + '../config/nodemailer/templates/user-sign_up.ejs', { username, link }, (error, data) => {
+          ejs.renderFile(__dirname + '/../config/nodemailer/templates/user-sign_up.ejs', { username, link }, (error, data) => {
             if (error) {
               console.log(error);
               res.send(error);

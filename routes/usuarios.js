@@ -8,13 +8,7 @@ const rateLimiter = require("../config/rate-limit");
 const { isLoggedInFalse, isLoggedInTrue } = require("../middleware/isLoggedin");
 const { checkRoles } = require("../middleware/roles");
 
-/* SignUp Usuario */
-router.post("/signup",rateLimiter, isLoggedInFalse, checkEmailExist, emailRateLimit, validatorSignUp, registerCtrl);
-/* Login Usuario */
-router.post("/login",rateLimiter, isLoggedInFalse, validatorLogin, loginCtrl);
-/* Logout Usuario */
-router.get("/logout",rateLimiter, isLoggedInTrue, logoutCtrl);
-router.get("/check-session", rateLimiter, ckeckSessCtrl);
+
 
 
 /* Lista los items */
