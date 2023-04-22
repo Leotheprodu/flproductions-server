@@ -9,6 +9,7 @@
     "dev": "nodemon ./app.js"
   },
   "dependencies": {
+    "@slack/webhook": "^6.1.0",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -19,6 +20,7 @@
     "express-rate-limit": "^6.7.0",
     "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
+    "morgan-body": "^2.6.8",
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
