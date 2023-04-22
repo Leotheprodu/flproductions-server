@@ -32,6 +32,12 @@ const Usuarios = sequelize.define(
     },
     {
         timestamps: false,
+        defaultScope: {
+            attributes: { exclude: ['password'] }
+        }
     });
 
+    Usuarios.addScope('withPassword', {
+        attributes: { include: ['password'] } // Incluye el campo `password` en este scope
+    });
 module.exports = Usuarios;

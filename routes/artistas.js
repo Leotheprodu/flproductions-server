@@ -4,6 +4,7 @@ const { getItems, createItem, getItem, updateItem, deleteItem } = require("../co
 const mysql = require("mysql2");
 const credentials = require("../config/credentials");
 const { validatorCreateItem, validatorGetItem } = require("../validators/artistas");
+const { checkRoles } = require("../middleware/roles");
 const connection = mysql.createConnection(credentials);
 
 /* Lista los items */
@@ -11,7 +12,7 @@ router.get("/", getItems);
 /* Obtener Item */
 router.get("/:id", validatorGetItem, getItem);
 /* Crea un registro */
-router.post("/", validatorCreateItem, createItem);
+router.post("/", validatorCreateItem, checkRoles([3,4,5]), createItem);
 /* Actualiza un Registro */
 router.put("/:id",validatorGetItem, validatorCreateItem, updateItem);
 /* Eliminar Item */

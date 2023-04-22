@@ -8,8 +8,9 @@ const saltRounds = 10;
 const ejs = require('ejs');
 const transporter = require("../config/nodemailer/transporter");
 const crypto = require('crypto');
-const emailRateLimit = require("../config/nodemailer/emailRateLimit");
+
 const rateLimit = require("../config/rate-limit");
+const emailRateLimit = require("../middleware/emailRateLimit");
 
 router.use("/signup", rateLimit);
 
