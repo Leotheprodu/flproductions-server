@@ -1,6 +1,7 @@
 const { matchedData } = require('express-validator');
 const { usuariosModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
+const { refreshUserRoles } = require('../utils/handleRoles');
 
 /**
  * Obtener la base de datos!
@@ -14,7 +15,6 @@ const getItems = async (req, res) => {
         const data = await usuariosModel.findAll({
             attributes: { exclude: ['password'] }
         });
-
         res.status(200).send({ data });
 
     } catch (error) {
@@ -33,11 +33,17 @@ const getItem = async (req, res) => {
     try {
 
         const { id } = matchedData(req);
-        const data = await usuariosModel.findByPk(id, {
-            attributes: { exclude: ['password'] }
-        });
-        data.set('password', undefined, { strict: false });
-        res.status(200).send({ data });
+        if (parseInt(id) === req.session.user.id || (req.session.roles).includes(5)) {
+
+            const data = await usuariosModel.findByPk(id, {
+                attributes: { exclude: ['password'] }
+            });
+            req.session.user = data
+            req.session.roles = await refreshUserRoles(data.id);
+            res.status(200).send({ message: "Datos de usuario generados con exito", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
+        }else{
+            handleHttpError(res, 'No tiene Permiso para ver esta informacion',401);
+        }
 
     } catch (error) {
         handleHttpError(res, 'Error al cargar el usuario');

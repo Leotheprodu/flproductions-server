@@ -14,7 +14,7 @@ const { checkRoles } = require("../middleware/roles");
 /* Lista los items */
 router.get("/",checkRoles([2]), getItems);
 /* Obtener Item */
-router.get("/:id",validatorGetItem,checkRoles([5]), getItem);
+router.get("/:id",validatorGetItem,checkRoles([2,5]), getItem);
 /* Actualiza un Registro */
 router.put("/:id",validatorGetItem,checkRoles([5]), updateItem);
 /* Eliminar Item */

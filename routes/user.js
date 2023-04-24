@@ -118,9 +118,8 @@ router.post('/recover-password', emailRateLimit, (req, res) => {
 
 }); // seguridad: envio de correos limitado
 
-router.post('/recover-password_step2', (req, res) => {
+router.post('/recover-password-step2', (req, res) => {
   const { email, password, pin } = req.body;
-
   connection.query('SELECT * FROM temp_token_pool WHERE token = ?', pin, function (err, resultados) {
 
     if (err) {

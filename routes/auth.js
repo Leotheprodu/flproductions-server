@@ -6,7 +6,6 @@ const checkEmailExist = require("../middleware/checkEmailExist");
 const emailRateLimit = require("../middleware/emailRateLimit");
 const rateLimiter = require("../config/rate-limit");
 const { isLoggedInFalse, isLoggedInTrue } = require("../middleware/isLoggedin");
-const { checkRoles } = require("../middleware/roles");
 
 /* SignUp Usuario */
 router.post("/signup",rateLimiter, isLoggedInFalse, checkEmailExist, emailRateLimit, validatorSignUp, registerCtrl);
