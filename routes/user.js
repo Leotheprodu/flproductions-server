@@ -12,42 +12,6 @@ const crypto = require('crypto');
 const rateLimit = require("../config/rate-limit");
 const emailRateLimit = require("../middleware/emailRateLimit");
 
-router.use("/signup", rateLimit);
-
-
-
-router.get('/user/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  if (id === req.session.user.id && req.session.isLoggedIn) {
-    const query = `SELECT * FROM usuarios WHERE id = ?`;
-    const values = [id];
-    connection.query(query, values, (error, results, fields) => {
-      if (error) {
-        console.error(error);
-      } else {
-        const query2 = "SELECT role_id FROM role_users WHERE user_id = ?";
-        const value = id;
-        req.session.user = results[0];
-        connection.query(query2, value, (error, results) => {
-          if (error) {
-            console.log(error);
-
-          } else {
-            req.session.roles = results.map(obj => obj.role_id).filter(val => val !== undefined);
-            res.status(200).send({ message: "Datos de usuario generados con exito", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
-
-          }
-
-        });
-
-      }
-    });
-  } else {
-    res.status(401).json({ message: "No tienes permiso para acceder a este recurso..." });
-  }
-
-}); // seguridad: para conectarse el suario debe estar logueado
-
 router.post('/recover-password', emailRateLimit, (req, res) => {
   const { email } = req.body;
   const token = crypto.randomBytes(6).toString('hex');// Genera un token aleatorio de 32 caracteres
@@ -423,96 +387,6 @@ router.get('/system-messages', (req, res) => {
   });
 
 }); //seguridad: aun no se me ocurre, porque  estos mensajes son muy generales y hay para todo publico
-
-router.post("/signup", emailRateLimit, (req, res) => {
-
-  const { email, password, username, fecha_creacion } = req.body;
-  const query = "SELECT * FROM usuarios WHERE email = ?";
-  const values = [email];
-  const token = crypto.randomBytes(32).toString('hex');// Genera un token aleatorio de 32 caracteres
-  const link = `${process.env.NODE_ENV === 'production' ? process.env.LINK_PROD_HOST : process.env.LINK_DEV_HOST}/verificar-email/${token}`;
-  const newTempToken = {
-    token: token,
-    user_email: email,
-    type: 'role'
-  };
-  connection.query(query, values, (error, results) => {
-    if (error) {
-      // Enviamos una respuesta de error si hay un error en la consulta
-      res.status(500).json({ message: "Ha ocurrido un error al verificar el correo" });
-
-      // revisamos que el correo no exista en la bd
-    } else if (results.length === 1 || req.session.isLoggedIn) {
-      res.status(403).json({ message: "Ya hay un usuario con ese correo" });
-      return;
-    } else {
-      // Hashea el password utilizando bcrypt
-      bcrypt.hash(password, saltRounds, function (err, hash) {
-        if (err) {
-          console.error(err);
-          res.status(500).json({ error: "Ha ocurrido un error con el password" });
-          return;
-        }
-
-        // Crea un objeto con los datos del nuevo usuario y el password hasheado
-        const newUser = {
-          username: username,
-          password: hash,
-          email: email,
-          fecha_creacion: fecha_creacion
-        };
-
-        // Inserta el nuevo usuario en la tabla de usuarios
-
-        connection.query('INSERT INTO usuarios SET ?', newUser, function (error, results, fields) {
-          if (error) {
-            console.error(error);
-            res.status(500).json({ error: "Ha ocurrido un error al guardar la informacion del nuevo usuario en la tabla usuarios" });
-            return;
-          }
-          connection.query('INSERT INTO temp_token_pool SET ?', newTempToken, function (error, results, fields) {
-            if (error) {
-              console.error(error);
-              res.status(500).json({ error: "Ha ocurrido un error al guardar los el registro en temp_token_pool" });
-              return;
-            }
-          });
-          res.status(200).json({ message: "Usuario creado con éxito" });
-
-          // Renderiza la plantilla con la variable del enlace
-          ejs.renderFile(__dirname + '/../config/nodemailer/templates/user-sign_up.ejs', { username, link }, (error, data) => {
-            if (error) {
-              console.log(error);
-              res.send(error);
-            } else {
-              const mailOptions = {
-                from: 'FLProductions <no-responder@flproductionscr.com>', // Coloca el correo desde el que enviarás los correos
-                to: email, // Coloca el correo del destinatario
-                subject: 'Verifique su correo',
-                html: data // Contenido HTML generado a partir de la plantilla
-              };
-              transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                  console.log(error);
-                  res.send(error);
-                } else {
-                  res.send('Correo enviado');
-
-                }
-              });
-            }
-          });
-
-        });
-
-      });
-    }
-
-
-  });
-
-
-}); //seguridad: limitado a 5 intentos por ip, ademas limitado los correos enviados para que no envien mas de 1 por minuto
 
 router.get('/email-verification/:token', (req, res) => {
   const token = req.params.token;

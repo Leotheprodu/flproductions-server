@@ -61,7 +61,7 @@ const registerCtrl = async (req, res) => {
 const loginCtrl = async (req, res) => {
     try {
         if(req.session.isLoggedIn){
-            res.status(200).send({ message: "Ya habias Iniciado Sesion!", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
+            res.status(200).send({ message: "Has Iniciado Sesion!", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
             return;
         }
         //Importa la data suministrada por el cliente ya filtrada
@@ -74,6 +74,10 @@ const loginCtrl = async (req, res) => {
         });
         if (!datosUsuario) {
             handleHttpError(res, 'El Usuario no existe', 404);
+            return
+        }
+        if (datosUsuario.activo === 0) {
+            handleHttpError(res, 'El usuario fue eliminado', 401);
             return
         }
         const hashPassword = await datosUsuario.password

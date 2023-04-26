@@ -12,7 +12,7 @@ const { refreshUserRoles } = require('../utils/handleRoles');
 const getItems = async (req, res) => {
 
     try {
-        const data = await usuariosModel.findAll({
+        const data = await usuariosModel.scope('activos').findAll({
             attributes: { exclude: ['password'] }
         });
         res.status(200).send({ data });
@@ -77,7 +77,28 @@ const updateItem = async (req, res) => {
 
 */
 const deleteItem = async (req, res) => {
+    try {
 
+        const { id } = matchedData(req);
+        if (parseInt(id) === req.session.user.id || (req.session.roles).includes(5)) {
+
+            const user = await usuariosModel.findByPk(id);
+            if (!user) {
+                handleHttpError(res, 'No se encontro el usuario',404);
+            }
+
+            user.activo = 0;
+            await user.save();
+            res.status(200).send({ message: "Usuario Eliminado"});
+        }else{
+            handleHttpError(res, 'No tiene Permiso para ver esta informacion',401);
+        }
+
+    } catch (error) {
+        handleHttpError(res, 'Error al intentar eliminar usuario');
+    }
+    
+    
 }
 
 module.exports = { getItems, getItem, updateItem, deleteItem };

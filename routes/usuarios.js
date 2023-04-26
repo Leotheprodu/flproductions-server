@@ -12,13 +12,13 @@ const { checkRoles } = require("../middleware/roles");
 
 
 /* Lista los items */
-router.get("/",checkRoles([2]), getItems);
+router.get("/",isLoggedInTrue, checkRoles([2]), getItems);
 /* Obtener Item */
-router.get("/:id",validatorGetItem,checkRoles([2,5]), getItem);
+router.get("/:id",isLoggedInTrue,checkRoles([2,5]), validatorGetItem, getItem);
 /* Actualiza un Registro */
-router.put("/:id",validatorGetItem,checkRoles([5]), updateItem);
+router.put("/:id",isLoggedInTrue, checkRoles([5]), validatorGetItem, updateItem);
 /* Eliminar Item */
-router.delete("/:id", validatorGetItem,checkRoles([5]), deleteItem);
+router.delete("/:id", isLoggedInTrue, checkRoles([2,5]), validatorGetItem, deleteItem);
 
 
 /**
