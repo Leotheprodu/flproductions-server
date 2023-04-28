@@ -24,26 +24,27 @@ const Usuarios = sequelize.define(
         },
         fecha_creacion: {
             type: DataTypes.DATE,
-
-        }, ultima_actualizacion: {
+        },
+        ultima_actualizacion: {
             type: DataTypes.TIME,
-        }, activo: {
+        },
+        activo: {
             type: DataTypes.TINYINT,
-        }
-
+        },
     },
     {
         timestamps: false,
         defaultScope: {
-            attributes: { exclude: ['password'] }
-        }
-    });
+            attributes: { exclude: ['password'] },
+        },
+    }
+);
 
 Usuarios.addScope('withPassword', {
-    attributes: { include: ['password'] } // Incluye el campo `password` en este scope
+    attributes: { include: ['password'] }, // Incluye el campo `password` en este scope
 });
 Usuarios.addScope('activos', {
     where: { activo: 1 },
-    attributes: { exclude: ['activo'] }
+    attributes: { exclude: ['activo'] },
 });
 module.exports = Usuarios;

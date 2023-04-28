@@ -12,12 +12,11 @@ const getItems = async (req, res) => {
     try {
         const artistas = await artistasModel.findAll();
         res.status(200).send({ artistas });
-
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al cargar los artistas');
     }
-}
+};
 
 /**
  * Obtener un detalle!
@@ -26,17 +25,14 @@ const getItems = async (req, res) => {
 
 */
 const getItem = async (req, res) => {
-    
     try {
-    
         const { id } = matchedData(req);
         const artista = await artistasModel.findByPk(id);
         res.status(200).send({ artista });
-
     } catch (error) {
         handleHttpError(res, 'Error al cargar el artista');
     }
-}
+};
 
 /**
  * Insertar un registro!
@@ -45,17 +41,15 @@ const getItem = async (req, res) => {
 
 */
 const createItem = async (req, res) => {
-
     try {
         const body = matchedData(req);
         const artista = await artistasModel.create(body);
         res.status(200).send({ artista });
-
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al crear el artista');
     }
-}
+};
 
 /**
  * Actualizar un registro!
@@ -69,17 +63,16 @@ const updateItem = async (req, res) => {
 
         const artista = await artistasModel.findByPk(id); // buscar la instancia por su identificador
         if (!artista) {
-            return  handleHttpError(res, 'Artista no encontrado', 404);
+            return handleHttpError(res, 'Artista no encontrado', 404);
         }
 
         await artista.update(body); // actualizar la instancia
         res.status(200).send({ artista });
-
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al actualizar el artista');
     }
-}
+};
 
 /**
  * Eliminar un registro!
@@ -92,15 +85,14 @@ const deleteItem = async (req, res) => {
         const { id } = matchedData(req);
         const artista = await artistasModel.findByPk(id);
         if (!artista) {
-            return  handleHttpError(res, 'Artista no encontrado', 404);
+            return handleHttpError(res, 'Artista no encontrado', 404);
         }
 
         await artista.destroy();
         res.status(200).send({ message: 'Artista eliminado correctamente' });
-
     } catch (error) {
         handleHttpError(res, 'Error al cargar el artista');
     }
-}
+};
 
 module.exports = { getItems, getItem, createItem, updateItem, deleteItem };

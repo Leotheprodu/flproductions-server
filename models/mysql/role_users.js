@@ -17,12 +17,11 @@ const Role_users = sequelize.define(
         role_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-        
-        }
-
+        },
     },
     {
         timestamps: false,
-    });
+    }
+);
 
 module.exports = Role_users;

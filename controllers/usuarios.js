@@ -10,17 +10,15 @@ const { refreshUserRoles } = require('../utils/handleRoles');
 
 */
 const getItems = async (req, res) => {
-
     try {
         const data = await usuariosModel.scope('activos').findAll({
-            attributes: { exclude: ['password'] }
+            attributes: { exclude: ['password'] },
         });
         res.status(200).send({ data });
-
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al cargar los usuarios');
-    };
+    }
 };
 
 /**
@@ -31,24 +29,33 @@ const getItems = async (req, res) => {
 */
 const getItem = async (req, res) => {
     try {
-
         const { id } = matchedData(req);
-        if (parseInt(id) === req.session.user.id || (req.session.roles).includes(5)) {
-
+        if (
+            parseInt(id) === req.session.user.id ||
+            req.session.roles.includes(5)
+        ) {
             const data = await usuariosModel.findByPk(id, {
-                attributes: { exclude: ['password'] }
+                attributes: { exclude: ['password'] },
             });
-            req.session.user = data
+            req.session.user = data;
             req.session.roles = await refreshUserRoles(data.id);
-            res.status(200).send({ message: "Datos de usuario generados con exito", isLoggedIn: true, user: req.session.user, roles: req.session.roles });
-        }else{
-            handleHttpError(res, 'No tiene Permiso para ver esta informacion',401);
+            res.status(200).send({
+                message: 'Datos de usuario generados con exito',
+                isLoggedIn: true,
+                user: req.session.user,
+                roles: req.session.roles,
+            });
+        } else {
+            handleHttpError(
+                res,
+                'No tiene Permiso para ver esta informacion',
+                401
+            );
         }
-
     } catch (error) {
         handleHttpError(res, 'Error al cargar el usuario');
     }
-}
+};
 
 /**
  * Insertar un registro!
@@ -57,18 +64,13 @@ const getItem = async (req, res) => {
 
 */
 
-
-
-
 /**
  * Actualizar un registro!
  * @param {*} req
  * @param {*} res
 
 */
-const updateItem = async (req, res) => {
-
-}
+const updateItem = async (req, res) => {};
 
 /**
  * Eliminar un registro!
@@ -78,27 +80,29 @@ const updateItem = async (req, res) => {
 */
 const deleteItem = async (req, res) => {
     try {
-
         const { id } = matchedData(req);
-        if (parseInt(id) === req.session.user.id || (req.session.roles).includes(5)) {
-
+        if (
+            parseInt(id) === req.session.user.id ||
+            req.session.roles.includes(5)
+        ) {
             const user = await usuariosModel.findByPk(id);
             if (!user) {
-                handleHttpError(res, 'No se encontro el usuario',404);
+                handleHttpError(res, 'No se encontro el usuario', 404);
             }
 
             user.activo = 0;
             await user.save();
-            res.status(200).send({ message: "Usuario Eliminado"});
-        }else{
-            handleHttpError(res, 'No tiene Permiso para ver esta informacion',401);
+            res.status(200).send({ message: 'Usuario Eliminado' });
+        } else {
+            handleHttpError(
+                res,
+                'No tiene Permiso para ver esta informacion',
+                401
+            );
         }
-
     } catch (error) {
         handleHttpError(res, 'Error al intentar eliminar usuario');
     }
-    
-    
-}
+};
 
 module.exports = { getItems, getItem, updateItem, deleteItem };

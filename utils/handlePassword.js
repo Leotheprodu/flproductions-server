@@ -3,26 +3,22 @@ const saltRounds = 10;
 
 /**
  * Constrasena sin encryptar
- * @param {*} passwordPlain 
+ * @param {*} passwordPlain
  */
 
 const encrypt = async (passwordPlain) => {
-    
-    const hash = await bcrypt.hash(passwordPlain, saltRounds)
-    
-    return hash;
+    const hash = await bcrypt.hash(passwordPlain, saltRounds);
 
-    
+    return hash;
 };
 
 /**
  * Pasar contrasena sin ecriptar y pasaron contrasena encriptada
- * @param {*} passwordPlain 
- * @param {*} hashPassword 
+ * @param {*} passwordPlain
+ * @param {*} hashPassword
  */
 
 const compare = async (passwordPlain, hashPassword) => {
-
     return await bcrypt.compare(passwordPlain, hashPassword);
 };
 

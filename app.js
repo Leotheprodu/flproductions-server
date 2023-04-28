@@ -1,5 +1,5 @@
 /* DEPENDENCIAS */
-require('dotenv').config({ override: true })
+require('dotenv').config({ override: true });
 const express = require("express");
 const PUERTO = process.env.PORT || 5000;
 const cors = require("cors");
@@ -16,6 +16,7 @@ morganBody(app, {
   logRequestBody: false,
 
 });
+
 morganBody(app, {
   noColors: true,
   stream: loggerstream,
@@ -30,7 +31,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
   credentials: true
-}))
+}));
 
 app.use(express.json());
 app.use(express.static('storage'));

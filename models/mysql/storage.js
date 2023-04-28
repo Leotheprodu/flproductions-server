@@ -28,12 +28,11 @@ const Storage = sequelize.define(
         user_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            
-        }
-
+        },
     },
     {
         tableName: 'storage',
-    });
+    }
+);
 
 module.exports = Storage;

@@ -17,7 +17,6 @@ const Producciones = sequelize.define(
         },
         descripcion: {
             type: DataTypes.STRING,
-            
         },
         id_artista: {
             type: DataTypes.INTEGER,
@@ -25,7 +24,6 @@ const Producciones = sequelize.define(
         },
         spotify_link: {
             type: DataTypes.STRING,
-            
         },
         youtube_id: {
             type: DataTypes.STRING,
@@ -57,21 +55,20 @@ const Producciones = sequelize.define(
             type: DataTypes.DATE,
             allowNull: false,
         },
-
     },
     {
         timestamps: false,
+    }
+);
+
+/**
+ * Implementando Modelo Personalizado
+ */
+Producciones.findAllData = function () {
+    Producciones.belongsTo(Artistas, {
+        foreignKey: 'id_artista',
     });
-
-    /**
-     * Implementando Modelo Personalizado
-     */
-    Producciones.findAllData = function(){
-        Producciones.belongsTo(Artistas, {
-            foreignKey:'id_artista',
-        });
-        return Producciones.findAll({include:Artistas});
-    };
-
+    return Producciones.findAll({ include: Artistas });
+};
 
 module.exports = Producciones;

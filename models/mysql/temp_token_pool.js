@@ -17,17 +17,17 @@ const Temp_token_pool = sequelize.define(
         token: {
             type: DataTypes.STRING,
             allowNull: false,
-            select:false,
+            select: false,
         },
         type: {
             type: DataTypes.STRING,
             allowNull: false,
-        }
-
+        },
     },
     {
         timestamps: false,
-        tableName: 'temp_token_pool'
-    });
+        tableName: 'temp_token_pool',
+    }
+);
 
 module.exports = Temp_token_pool;

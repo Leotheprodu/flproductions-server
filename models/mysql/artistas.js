@@ -1,7 +1,6 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
 
-
 const Artistas = sequelize.define(
     'artistas',
     {
@@ -31,15 +30,15 @@ const Artistas = sequelize.define(
         tipo: {
             type: DataTypes.STRING,
             allowNull: false,
-        }
-
+        },
     },
     {
         timestamps: false,
-    });
+    }
+);
 
-    /**
-     * Implementando Modelo Personalizado
-     */
+/**
+ * Implementando Modelo Personalizado
+ */
 
 module.exports = Artistas;
