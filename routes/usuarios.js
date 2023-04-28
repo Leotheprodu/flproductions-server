@@ -2,23 +2,13 @@ const express = require('express');
 const router = express.Router();
 const {
     getItems,
-    registerCtrl,
     getItem,
     updateItem,
     deleteItem,
-    loginCtrl,
-    logoutCtrl,
-    ckeckSessCtrl,
 } = require('../controllers/usuarios');
-const {
-    validatorLogin,
-    validatorGetItem,
-    validatorSignUp,
-} = require('../validators/usuarios');
-const checkEmailExist = require('../middleware/checkEmailExist');
-const emailRateLimit = require('../middleware/emailRateLimit');
-const rateLimiter = require('../config/rate-limit');
-const { isLoggedInFalse, isLoggedInTrue } = require('../middleware/isLoggedIn');
+const { validatorGetItem } = require('../validators/usuarios');
+
+const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const { checkRoles } = require('../middleware/roles');
 
 /* Lista los items */

@@ -1,4 +1,3 @@
-const { matchedData } = require('express-validator');
 const { produccionesModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 
@@ -24,7 +23,7 @@ const getItems = async (req, res) => {
  * @param {*} res
 
 */
-const getItem = async (req, res) => {};
+const getItem = async () => {};
 
 /**
  * Insertar un registro!
@@ -32,7 +31,7 @@ const getItem = async (req, res) => {};
  * @param {*} res
 
 */
-const createItem = async (req, res) => {};
+const createItem = async () => {};
 
 /**
  * Actualizar un registro!
@@ -40,7 +39,7 @@ const createItem = async (req, res) => {};
  * @param {*} res
 
 */
-const updateItem = async (req, res) => {};
+const updateItem = async () => {};
 
 /**
  * Eliminar un registro!
@@ -48,6 +47,6 @@ const updateItem = async (req, res) => {};
  * @param {*} res
 
 */
-const deleteItem = async (req, res) => {};
+const deleteItem = async () => {};
 
 module.exports = { getItems, getItem, createItem, updateItem, deleteItem };

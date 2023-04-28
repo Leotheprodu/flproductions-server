@@ -8,8 +8,6 @@ const saltRounds = 10;
 const ejs = require('ejs');
 const transporter = require('../config/nodemailer/transporter');
 const crypto = require('crypto');
-
-const rateLimit = require('../config/rate-limit');
 const emailRateLimit = require('../middleware/emailRateLimit');
 
 router.post('/recover-password', emailRateLimit, (req, res) => {
@@ -36,7 +34,7 @@ router.post('/recover-password', emailRateLimit, (req, res) => {
                 connection.query(
                     'INSERT INTO temp_token_pool SET ?',
                     newTempToken,
-                    function (error, results, fields) {
+                    function (error) {
                         if (error) {
                             console.error(error);
                             res.status(500).json({
@@ -62,7 +60,7 @@ router.post('/recover-password', emailRateLimit, (req, res) => {
                                     };
                                     transporter.sendMail(
                                         mailOptions,
-                                        (error, info) => {
+                                        (error) => {
                                             if (error) {
                                                 console.log(error);
                                                 res.send(error);
@@ -75,11 +73,7 @@ router.post('/recover-password', emailRateLimit, (req, res) => {
                                                     connection.query(
                                                         'DELETE FROM temp_token_pool WHERE user_email = ? AND type = ?',
                                                         [email, 'password'],
-                                                        function (
-                                                            error,
-                                                            results,
-                                                            fields
-                                                        ) {
+                                                        function (error) {
                                                             if (error) {
                                                                 console.error(
                                                                     error
@@ -154,7 +148,7 @@ router.post('/recover-password-step2', (req, res) => {
                                         connection.query(
                                             'UPDATE usuarios SET password = ? WHERE id = ?',
                                             [hash, results[0].id],
-                                            function (error, results) {
+                                            function (error) {
                                                 if (error) {
                                                     console.error(error);
                                                     res.status(500).json({
@@ -212,7 +206,7 @@ router.put('/update-users/:id', (req, res) => {
                 connection.query(
                     'DELETE FROM role_users WHERE user_id = ? AND role_id = ?',
                     [id, 1],
-                    function (error, results, fields) {
+                    function (error) {
                         if (error) {
                             console.error(error);
                             res.status(500).json({
@@ -233,7 +227,7 @@ router.put('/update-users/:id', (req, res) => {
             connection.query(
                 'INSERT INTO temp_token_pool SET ?',
                 newTempToken,
-                function (error, results, fields) {
+                function (error) {
                     if (error) {
                         console.error(error);
                         res.status(500).json({
@@ -256,16 +250,12 @@ router.put('/update-users/:id', (req, res) => {
                                     subject: 'Verifique su correo',
                                     html: data, // Contenido HTML generado a partir de la plantilla
                                 };
-                                transporter.sendMail(
-                                    mailOptions,
-                                    (error, info) => {
-                                        if (error) {
-                                            console.log(error);
-                                            res.send(error);
-                                        } else {
-                                        }
+                                transporter.sendMail(mailOptions, (error) => {
+                                    if (error) {
+                                        console.log(error);
+                                        res.send(error);
                                     }
-                                );
+                                });
                             }
                         }
                     );
@@ -284,7 +274,7 @@ router.put('/update-users/:id', (req, res) => {
         values.push(id);
 
         if (req.session.isLoggedIn) {
-            connection.query(sql, values, (error, resultado) => {
+            connection.query(sql, values, (error) => {
                 if (error) {
                     console.error('Error al actualizar los datos: ', error);
                     res.status(500).send('Error al actualizar los datos');
@@ -360,7 +350,7 @@ router.get('/verify-email/:email', (req, res) => {
         connection.query(
             'INSERT INTO temp_token_pool SET ?',
             newTempToken,
-            function (error, results, fields) {
+            function (error) {
                 if (error) {
                     console.error(error);
                     res.status(500).json({
@@ -383,11 +373,10 @@ router.get('/verify-email/:email', (req, res) => {
                                 subject: 'Verifique su correo',
                                 html: data, // Contenido HTML generado a partir de la plantilla
                             };
-                            transporter.sendMail(mailOptions, (error, info) => {
+                            transporter.sendMail(mailOptions, (error) => {
                                 if (error) {
                                     console.log(error);
                                     res.send(error);
-                                } else {
                                 }
                             });
                         }
@@ -518,7 +507,7 @@ router.get('/email-verification/:token', (req, res) => {
                     connection.query(
                         'INSERT INTO role_users SET ?',
                         rolVerificado,
-                        function (error, results, fields) {
+                        function (error) {
                             if (error) {
                                 console.error(error);
                                 res.status(500).json({
@@ -531,7 +520,7 @@ router.get('/email-verification/:token', (req, res) => {
                                 connection.query(
                                     'DELETE FROM temp_token_pool WHERE user_email = ? AND type = ?',
                                     [email, 'role'],
-                                    function (error, results, fields) {
+                                    function (error) {
                                         if (error) {
                                             console.error(error);
                                             res.status(500).json({
@@ -546,11 +535,7 @@ router.get('/email-verification/:token', (req, res) => {
                                             connection.query(
                                                 'INSERT INTO avatar_users SET ?',
                                                 AvatarInfo,
-                                                function (
-                                                    error,
-                                                    results,
-                                                    fields
-                                                ) {
+                                                function (error) {
                                                     if (error) {
                                                         console.error(error);
                                                         res.status(500).json({

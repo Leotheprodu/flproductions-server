@@ -20,7 +20,10 @@ const createTempToken = async (token, user_email, type) => {
         user_email,
         type,
     });
-    const message = { message: 'token temporal guardado existosamente' };
+    const message = {
+        message: 'token temporal guardado existosamente',
+        temp_token,
+    };
     return message;
 };
 
@@ -31,11 +34,14 @@ const deleteTempToken = async (token, user_email, type) => {
         });
 
         await temp_token.destroy();
+        const message = {
+            message: 'token temporal eliminado existosamente',
+            temp_token,
+        };
+        return message;
     } catch (error) {
         console.log(error);
     }
-
-    return temp_token;
 };
 
 module.exports = { newToken, createTempToken, deleteTempToken };

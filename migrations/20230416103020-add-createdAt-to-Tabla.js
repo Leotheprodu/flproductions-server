@@ -16,7 +16,7 @@ module.exports = {
         });
     },
 
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface) {
         return queryInterface.removeColumn('artistas', 'createdAt');
         /**
          * Add reverting commands here.

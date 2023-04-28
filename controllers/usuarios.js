@@ -70,7 +70,7 @@ const getItem = async (req, res) => {
  * @param {*} res
 
 */
-const updateItem = async (req, res) => {};
+const updateItem = async () => {};
 
 /**
  * Eliminar un registro!
