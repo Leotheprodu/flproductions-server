@@ -4,7 +4,7 @@ const path = require('path');
 const webHook = new IncomingWebhook(process.env.SLACK_WEBHOOK);
 
 const loggerstream = {
-    write: (message) => {
+    write: (message: string) => {
         webHook.send({
             text: message,
         });
