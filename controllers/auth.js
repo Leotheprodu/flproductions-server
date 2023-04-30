@@ -31,11 +31,7 @@ const registerCtrl = async (req, res) => {
         const token = await newToken();
 
         //Crea el link que va a ser enviar al correo del nuevo usuario para verificar el email
-        const link = `${
-            process.env.NODE_ENV === 'production'
-                ? process.env.LINK_PROD_HOST
-                : process.env.LINK_DEV_HOST
-        }/verificar-email/${token}`;
+        const link = `${process.env.LINK_HOST}/verificar-email/${token}`;
 
         // Crea el objeto con el nombre y correo del remitente del correo a enviar
         const from = {
