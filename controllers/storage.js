@@ -3,10 +3,7 @@ const { matchedData } = require('express-validator');
 const { storageModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 
-const PUBLIC_URL =
-    process.env.NODE_ENV === 'production'
-        ? process.env.PUBLIC_URL_PROD
-        : process.env.PUBLIC_URL_DEV;
+const PUBLIC_URL = process.env.PUBLIC_URL;
 const MEDIA_PATH = `${__dirname}/../storage`;
 /**
  * Obtener la base de datos!

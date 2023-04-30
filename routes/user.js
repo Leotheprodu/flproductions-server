@@ -187,11 +187,7 @@ router.put('/update-users/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const { username, email, password } = req.body;
     const token = crypto.randomBytes(32).toString('hex'); // Genera un token aleatorio de 32 caracteres
-    const link = `${
-        process.env.NODE_ENV === 'production'
-            ? process.env.LINK_PROD_HOST
-            : process.env.LINK_DEV_HOST
-    }/verificar-email/${token}`;
+    const link = `${process.env.LINK_HOST}/verificar-email/${token}`;
     const newTempToken = {
         token: token,
         user_email: email,
@@ -335,11 +331,7 @@ router.get('/verify-email/:email', (req, res) => {
     const username = req.session.user.username;
     const email = req.params.email;
     const token = crypto.randomBytes(32).toString('hex'); // Genera un token aleatorio de 32 caracteres
-    const link = `${
-        process.env.NODE_ENV === 'production'
-            ? process.env.LINK_PROD_HOST
-            : process.env.LINK_DEV_HOST
-    }/verificar-email/${token}`;
+    const link = `${process.env.LINK_HOST}/verificar-email/${token}`;
     const newTempToken = {
         token: token,
         user_email: email,

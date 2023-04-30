@@ -26,7 +26,7 @@ morganBody(app, {
 
 app.use(
     cors({
-        origin: process.env.LINK_DEV_HOST,
+        origin: process.env.LINK_CORS,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
         allowedHeaders: [
             'Content-Type',
