@@ -47,9 +47,9 @@ app.use(express.static('storage'));
 app.use(session(sess));
 app.use('/api', require('./routes'));
 
-app.use((err, req, res) => {
-    res.status(500).send('Ocurrió un error en el servidor');
-});
+/* app.use((err, req, res) => {
+    res.status(500).send({ message: 'Ocurrió un error en el servidor' });
+}); */
 
 const server = app.listen(PUERTO, () => {
     console.log(`El servidor esta escuchando en el puerto ${PUERTO}...`);

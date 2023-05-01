@@ -12,7 +12,7 @@ const removeExtension = (fileName) => {
 fs.readdirSync(PATH_MODELS).forEach((file) => {
     if (file.endsWith('.js')) {
         const name = removeExtension(file);
-        models[`${name}Model`] = require(`./mysql/${name}`);
+        models[`${name}Model`] = require(`./mysql/${file}`);
     }
 });
 

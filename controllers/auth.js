@@ -1,12 +1,15 @@
 const { matchedData } = require('express-validator');
-const { usuariosModel } = require('../models');
+const { usuariosModel, temp_token_poolModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { encrypt, compare } = require('../utils/handlePassword');
 const dateNow = require('../utils/handleFechaActual');
-const { createTempToken, newToken } = require('../utils/handleTempToken');
+const {
+    createTempToken,
+    newToken,
+    deleteTempToken,
+} = require('../utils/handleTempToken');
 const { sendAEmail } = require('../utils/handleSendEmail');
 const { refreshUserRoles } = require('../utils/handleRoles');
-
 const registerCtrl = async (req, res) => {
     try {
         //Importa la data suministrada por el cliente ya filtrada
@@ -167,4 +170,63 @@ const ckeckSessCtrl = async (req, res) => {
     }
 };
 
-module.exports = { registerCtrl, loginCtrl, logoutCtrl, ckeckSessCtrl };
+const sendPin = async (req, res) => {
+    try {
+        const { email } = matchedData(req);
+        const token = await newToken();
+        const datosUsuario = await usuariosModel.findOne({
+            where: { email },
+        });
+        if (!datosUsuario) return handleHttpError(res, 'USER_NOT_FOUND');
+        await createTempToken(token, email, 'password');
+        const from = {
+            name: 'FLProductions',
+            email: 'no-responder@flproductionscr.com',
+        };
+        const dataToEJS = { token };
+        await sendAEmail(
+            'user-recuperar-password',
+            dataToEJS,
+            from,
+            email,
+            'PIN para recuperar contraseña'
+        );
+
+        setTimeout(() => {
+            deleteTempToken(token, email, 'password');
+        }, 600000);
+        res.send({ message: 'PIN_SENT' });
+    } catch (error) {
+        handleHttpError(res, 'Error al intenta recuperar password');
+    }
+};
+const recoverPassword = async (req, res) => {
+    try {
+        const { email, password, pin } = matchedData(req);
+        const data = await temp_token_poolModel.findOne({
+            where: { token: pin },
+        });
+
+        if (!data) return handleHttpError(res, 'INVALID_PIN');
+        const hashPassword = await encrypt(password);
+
+        const user = await usuariosModel.findOne({
+            where: { email },
+        });
+        await user.update({ password: hashPassword });
+        await data.destroy();
+
+        res.send({ message: 'PASSWORD_UPDATED' });
+    } catch (error) {
+        handleHttpError(res, 'Error al intenta recuperar password');
+    }
+};
+
+module.exports = {
+    registerCtrl,
+    loginCtrl,
+    logoutCtrl,
+    ckeckSessCtrl,
+    sendPin,
+    recoverPassword,
+};

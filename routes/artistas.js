@@ -10,9 +10,11 @@ const {
 const {
     validatorCreateItem,
     validatorGetItem,
+    validatorUpdateItem,
 } = require('../validators/artistas');
 const { checkRoles } = require('../middleware/roles');
 const rateLimiter = require('../config/rate-limit');
+const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 
 /* Lista los items */
 router.get('/', getItems);
@@ -29,9 +31,10 @@ router.post(
 /* Actualiza un Registro */
 router.put(
     '/:id',
+    isLoggedInTrue,
     rateLimiter,
     validatorGetItem,
-    validatorCreateItem,
+    validatorUpdateItem,
     checkRoles([3, 4, 5]),
     updateItem
 );

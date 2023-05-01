@@ -17,10 +17,29 @@ const validatorLogin = [
 
     (req, res, next) => validateResults(req, res, next),
 ];
+const validatorEmail = [
+    check('email').exists().notEmpty().isEmail(),
+    (req, res, next) => validateResults(req, res, next),
+];
+const validatorRecoverPassword = [
+    check('email').exists().notEmpty().isEmail(),
+
+    check('password').exists().notEmpty().isString(),
+
+    check('pin').exists().notEmpty().isString(),
+
+    (req, res, next) => validateResults(req, res, next),
+];
 
 const validatorGetItem = [
     check('id').exists().isNumeric().notEmpty(),
 
     (req, res, next) => validateResults(req, res, next),
 ];
-module.exports = { validatorLogin, validatorGetItem, validatorSignUp };
+module.exports = {
+    validatorLogin,
+    validatorGetItem,
+    validatorSignUp,
+    validatorEmail,
+    validatorRecoverPassword,
+};

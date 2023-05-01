@@ -60,14 +60,16 @@ const createItem = async (req, res) => {
 const updateItem = async (req, res) => {
     try {
         const { id, ...body } = matchedData(req);
-
         const artista = await artistasModel.findByPk(id); // buscar la instancia por su identificador
-        if (!artista) {
-            return handleHttpError(res, 'Artista no encontrado', 404);
+        if (!artista) return handleHttpError(res, 'Artista no encontrado', 404);
+
+        if (req.session.user.id !== artista.user_id) {
+            if (!req.session.roles.includes(5))
+                return handleHttpError(res, 'NOT_PERMISSION', 401);
         }
 
         await artista.update(body); // actualizar la instancia
-        res.status(200).send({ artista });
+        res.status(200).send({ message: 'actualizado con exito' });
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al actualizar el artista');

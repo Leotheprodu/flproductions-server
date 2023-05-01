@@ -20,10 +20,23 @@ const validatorCreateItem = [
 
     (req, res, next) => validateResults(req, res, next),
 ];
+const validatorUpdateItem = [
+    check('nombre_artista').optional().isLength({ min: 2, max: 20 }),
+
+    check('instagram').optional().isString(),
+
+    check('spotify').optional().isString(),
+
+    check('imagen').optional().isString(),
+
+    check('info').optional().isString(),
+
+    (req, res, next) => validateResults(req, res, next),
+];
 
 const validatorGetItem = [
     check('id').exists().notEmpty(),
 
     (req, res, next) => validateResults(req, res, next),
 ];
-module.exports = { validatorCreateItem, validatorGetItem };
+module.exports = { validatorCreateItem, validatorGetItem, validatorUpdateItem };
