@@ -5,9 +5,10 @@ const {
     getItem,
     updateItem,
     deleteItem,
+    avatarCtrl,
+    avatarUpdateCtrl,
 } = require('../controllers/usuarios');
-const { validatorGetItem } = require('../validators/usuarios');
-
+const { validatorGetItem, validatorAvatar } = require('../validators/usuarios');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const { checkRoles } = require('../middleware/roles');
 
@@ -36,6 +37,14 @@ router.delete(
     checkRoles([2, 5]),
     validatorGetItem,
     deleteItem
+);
+router.get('/avatar/:id', validatorGetItem, avatarCtrl);
+router.post(
+    '/avatar-update',
+    isLoggedInTrue,
+    checkRoles([1]),
+    validatorAvatar,
+    avatarUpdateCtrl
 );
 
 /**

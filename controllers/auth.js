@@ -1,5 +1,10 @@
 const { matchedData } = require('express-validator');
-const { usuariosModel, temp_token_poolModel } = require('../models');
+const {
+    usuariosModel,
+    temp_token_poolModel,
+    role_usersModel,
+    avatar_usersModel,
+} = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { encrypt, compare } = require('../utils/handlePassword');
 const dateNow = require('../utils/handleFechaActual');
@@ -7,6 +12,7 @@ const {
     createTempToken,
     newToken,
     deleteTempToken,
+    deleteTempNoToken,
 } = require('../utils/handleTempToken');
 const { sendAEmail } = require('../utils/handleSendEmail');
 const { refreshUserRoles } = require('../utils/handleRoles');
@@ -221,6 +227,121 @@ const recoverPassword = async (req, res) => {
         handleHttpError(res, 'Error al intenta recuperar password');
     }
 };
+const updateUsersCtrl = async (req, res) => {
+    try {
+        //Importa la data suministrada por el cliente ya filtrada
+        const { id, username, email, password } = matchedData(req);
+        //traemos la info del usuario desde la bd.
+        const userDB = await usuariosModel.findByPk(id);
+        //se asegura que solo el usuario o un admin pueda actializar informacion del usuario.
+        if (parseInt(id) !== req.session.user.id)
+            return handleHttpError(res, 'NO_PERMISSION');
+
+        //comprobamos si el usuario ha cambiado el email.
+        if (email !== req.session.user.email) {
+            const token = await newToken();
+            const link = `${process.env.LINK_HOST}/verificar-email/${token}`;
+            const from = {
+                name: 'FLProductions',
+                email: 'no-responder@flproductionscr.com',
+            };
+            const dataToEJS = { username: req.session.user.username, link };
+
+            // con este  trycatch se evalua si el usuario ya estaba verificado, si lo estaba, va a borrar el verificado, el avatar, crea el temp token, actualiza el nuevo email, y si no esta verificado, solo actualiza el nuevo email y creal el temp token.
+            try {
+                const verificado = await role_usersModel.findOne({
+                    where: { user_id: id, role_id: 1 },
+                });
+
+                verificado.destroy();
+                await userDB.update({ email });
+                await createTempToken(token, email, 'role');
+                const avatarUser = await avatar_usersModel.findOne({
+                    where: { user_id: id },
+                });
+                avatarUser.destroy();
+            } catch (error) {
+                await userDB.update({ email });
+                await createTempToken(token, email, 'role');
+            }
+            //envia el email con el token para ser verificado al nuevo email.
+            await sendAEmail(
+                'user-verificar_correo',
+                dataToEJS,
+                from,
+                email,
+                'Verifique su correo'
+            );
+        }
+        //comprueba que el usuario haya cambiado la contraseña y si lo hizo se actualiza en la BD.
+        if (password && password.length > 2) {
+            const hashPassword = await encrypt(password);
+            await userDB.update({ password: hashPassword });
+        }
+        //comprueba si ha cambiado el username, si lo hizo, que lo actualice.
+        if (username !== req.session.user.username && username.length > 2) {
+            await userDB.update({ username });
+        }
+
+        //traemos toda la info del usuario actualizada
+        const userActualizado = await usuariosModel.findByPk(id);
+        //actualizamos la info de sesion
+        req.session.user = userActualizado;
+        //respondemos la solicitud
+        res.send({
+            message: 'actualizado con exito',
+            usuario: userActualizado,
+        });
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al Actualizar usuario el usuario');
+    }
+};
+const verifyEmailCtrl = async (req, res) => {
+    try {
+        const { email } = matchedData(req);
+        if (email !== req.session.user.email)
+            return handleHttpError(res, 'NO_PERMISSION');
+        const token = await newToken();
+        await deleteTempNoToken(email, 'role');
+        await createTempToken(token, email, 'role');
+
+        const link = `${process.env.LINK_HOST}/verificar-email/${token}`;
+        const from = {
+            name: 'FLProductions',
+            email: 'no-responder@flproductionscr.com',
+        };
+        const dataToEJS = { username: req.session.user.username, link };
+        await sendAEmail(
+            'user-verificar_correo',
+            dataToEJS,
+            from,
+            email,
+            'Verifique su correo'
+        );
+
+        res.send({ message: 'VERIFY_EMAIL_SEND' });
+    } catch (error) {
+        handleHttpError(res, 'PROBLEMA_AL_ENVIAR_EMAIL_DE_VERIFICACION');
+    }
+};
+const emailVerifyCtrl = async (req, res) => {
+    try {
+        const { token } = matchedData(req);
+        const tempToken = await temp_token_poolModel.findOne({
+            where: { token, type: 'role' },
+        });
+        const UserData = await usuariosModel.findOne({
+            where: { email: tempToken.user_email },
+        });
+        tempToken.destroy();
+        await role_usersModel.create({ user_id: UserData.id, role_id: 1 });
+        await avatar_usersModel.create({ user_id: UserData.id, avatar: 8 });
+        res.send({ message: 'EMAIL_VERIFIED', email: UserData.email });
+    } catch (error) {
+        handleHttpError(res, 'INVALID_TOKEN');
+    }
+};
 
 module.exports = {
     registerCtrl,
@@ -229,4 +350,7 @@ module.exports = {
     ckeckSessCtrl,
     sendPin,
     recoverPassword,
+    updateUsersCtrl,
+    verifyEmailCtrl,
+    emailVerifyCtrl,
 };

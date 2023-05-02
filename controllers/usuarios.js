@@ -1,5 +1,5 @@
 const { matchedData } = require('express-validator');
-const { usuariosModel } = require('../models');
+const { usuariosModel, avatar_usersModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { refreshUserRoles } = require('../utils/handleRoles');
 
@@ -104,5 +104,56 @@ const deleteItem = async (req, res) => {
         handleHttpError(res, 'Error al intentar eliminar usuario');
     }
 };
+/**
+ * Obtener la base de datos!
+ * @param {*} req
+ * @param {*} res
 
-module.exports = { getItems, getItem, updateItem, deleteItem };
+*/
+const avatarCtrl = async (req, res) => {
+    try {
+        const { id } = matchedData(req);
+        const data = await avatar_usersModel.findOne({
+            where: { user_id: id },
+        });
+
+        res.status(200).json({
+            message: 'avatar encontrado',
+            avatar: data.avatar,
+        });
+    } catch (error) {
+        res.status(200).json({
+            message: 'avatar no Encontrado',
+            avatar: 8,
+        });
+    }
+};
+const avatarUpdateCtrl = async (req, res) => {
+    try {
+        const { id, avatar } = matchedData(req);
+
+        if (parseInt(id) !== req.session.user.id)
+            return handleHttpError(res, 'NOT_PERMISSION', 401);
+
+        const userAvatar = await avatar_usersModel.findOne({
+            where: { user_id: id },
+        });
+        await userAvatar.update({ avatar });
+        req.session.avatar = avatar;
+        res.status(200).json({
+            message: 'avatar actualizado',
+            avatar: userAvatar.avatar,
+        });
+    } catch (error) {
+        handleHttpError(res, 'Error al intentar actualizar avatar de usuario');
+    }
+};
+
+module.exports = {
+    getItems,
+    getItem,
+    updateItem,
+    deleteItem,
+    avatarCtrl,
+    avatarUpdateCtrl,
+};

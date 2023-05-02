@@ -48,5 +48,26 @@ const deleteTempToken = async (token, user_email, type) => {
         console.log(error);
     }
 };
+const deleteTempNoToken = async (user_email, type) => {
+    try {
+        const temp_token = await temp_token_poolModel.findOne({
+            where: { user_email, type },
+        });
+        if (!temp_token) return;
 
-module.exports = { newToken, createTempToken, deleteTempToken };
+        await temp_token.destroy();
+        const message = {
+            message: 'token temporal eliminado existosamente',
+        };
+        return message;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+module.exports = {
+    newToken,
+    createTempToken,
+    deleteTempToken,
+    deleteTempNoToken,
+};

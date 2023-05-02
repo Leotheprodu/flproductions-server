@@ -1,5 +1,9 @@
 const { handleHttpError } = require('../utils/handleError');
-
+/**
+ * Este Middleware filtra que cada solicitud si contenga estos roles
+ * @param {[number]} roles
+ * @returns
+ */
 const checkRoles = (roles) => (req, res, next) => {
     try {
         const rolesByUser = req.session.roles;
@@ -21,5 +25,26 @@ const checkRoles = (roles) => (req, res, next) => {
         handleHttpError(res, 'ERROR_PERMISSIONS', 403);
     }
 };
+/**
+ *Este Middleware filtra que cada solicitud no contenga estos roles
+ * @param {[number]} roles
+ * @returns
+ */
+const checkNoRoles = (roles) => (req, res, next) => {
+    try {
+        const rolesByUser = req.session.roles;
+        const checkValueRol = roles.some((rolSingle) =>
+            rolesByUser.includes(rolSingle)
+        );
 
-module.exports = { checkRoles };
+        if (checkValueRol)
+            return handleHttpError(res, 'USER_NOT_PERMISSIONS', 403);
+
+        next();
+    } catch (error) {
+        console.log(error);
+        handleHttpError(res, 'ERROR_PERMISSIONS', 403);
+    }
+};
+
+module.exports = { checkRoles, checkNoRoles };
