@@ -12,5 +12,11 @@ const validatorAvatar = [
 
     (req, res, next) => validateResults(req, res, next),
 ];
+const validatorUserType = [
+    check('roles').exists().isArray().notEmpty(),
+    check('id').exists().isNumeric().notEmpty(),
 
-module.exports = { validatorGetItem, validatorAvatar };
+    (req, res, next) => validateResults(req, res, next),
+];
+
+module.exports = { validatorGetItem, validatorAvatar, validatorUserType };

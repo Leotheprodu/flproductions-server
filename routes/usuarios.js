@@ -7,10 +7,16 @@ const {
     deleteItem,
     avatarCtrl,
     avatarUpdateCtrl,
+    UserTypeCtrl,
 } = require('../controllers/usuarios');
-const { validatorGetItem, validatorAvatar } = require('../validators/usuarios');
+const {
+    validatorGetItem,
+    validatorAvatar,
+    validatorUserType,
+} = require('../validators/usuarios');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const { checkRoles } = require('../middleware/roles');
+const jsonToArrayBody = require('../middleware/jsonToArrayBody');
 
 /* Lista los items */
 router.get('/', isLoggedInTrue, checkRoles([2]), getItems);
@@ -45,6 +51,14 @@ router.post(
     checkRoles([1]),
     validatorAvatar,
     avatarUpdateCtrl
+);
+router.post(
+    '/user-type',
+    isLoggedInTrue,
+    jsonToArrayBody,
+    validatorUserType,
+    checkRoles([1]),
+    UserTypeCtrl
 );
 
 /**

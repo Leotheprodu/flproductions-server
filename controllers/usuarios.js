@@ -1,7 +1,7 @@
 const { matchedData } = require('express-validator');
 const { usuariosModel, avatar_usersModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
-const { refreshUserRoles } = require('../utils/handleRoles');
+const { refreshUserRoles, addUserRoles } = require('../utils/handleRoles');
 
 /**
  * Obtener la base de datos!
@@ -149,6 +149,22 @@ const avatarUpdateCtrl = async (req, res) => {
     }
 };
 
+const UserTypeCtrl = async (req, res) => {
+    try {
+        const { id, roles } = matchedData(req);
+        if (parseInt(id) !== req.session.user.id)
+            return handleHttpError(res, 'NOT_PERMISSION', 401);
+
+        const rolesActualizados = await addUserRoles(id, roles, [3, 4]);
+        res.status(200).json({
+            message: 'Roles actualizados',
+            roles: rolesActualizados,
+        });
+    } catch (error) {
+        handleHttpError(res, 'ERROR_USER_TYPE');
+    }
+};
+
 module.exports = {
     getItems,
     getItem,
@@ -156,4 +172,5 @@ module.exports = {
     deleteItem,
     avatarCtrl,
     avatarUpdateCtrl,
+    UserTypeCtrl,
 };
