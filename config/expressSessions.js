@@ -7,7 +7,7 @@ const sessionStore = new MySQLStore({}, connection);
 
 const sess = {
     key: 'sessionId',
-    secret: 'music oso',
+    secret: process.env.SECRET_EXPRESS_SESSION,
     store: sessionStore,
     resave: true,
     saveUninitialized: false,

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const uploadMiddleware = require('../utils/handleStorage');
+const { uploadMiddleware } = require('../utils/handleStorage');
 const {
     createItem,
     getItems,
@@ -22,7 +22,9 @@ router.post(
     ratelimiter,
     isLoggedInTrue,
     checkRoles([3, 4, 5, 6]),
-    uploadMiddleware.single('myfile'),
+    uploadMiddleware(['wav', 'mp3', 'zip', 'rar', 'jpg', 'png']).single(
+        'myfile'
+    ),
     createItem
 );
 /* Eliminar Item */

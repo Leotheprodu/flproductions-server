@@ -1,7 +1,8 @@
 const { matchedData } = require('express-validator');
 const { artistasModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
-
+const { storageModel } = require('../models');
+const PUBLIC_URL = process.env.PUBLIC_URL;
 /**
  * Obtener la base de datos!
  * @param {*} req
@@ -96,5 +97,47 @@ const deleteItem = async (req, res) => {
         handleHttpError(res, 'Error al cargar el artista');
     }
 };
+const createArtistCtrl = async (req, res) => {
+    try {
+        const { file } = req;
+        const { nombre_artista, instagram, spotify, info, tipo } =
+            matchedData(req);
+        const fileData = {
+            id: file.filename.split('.').shift(),
+            filename: file.filename,
+            url: `${PUBLIC_URL}/${req.session.user.id}/${file.filename}`,
+            originalname: file.originalname.split('.').shift(),
+            ext: file.filename.split('.').pop(),
+            user_id: req.session.user.id,
+        };
+        const artistData = {
+            nombre_artista,
+            instagram,
+            spotify,
+            info,
+            tipo,
+            imagen: fileData.url,
+            user_id: fileData.user_id,
+        };
+        await artistasModel.create(artistData);
+        await storageModel.create(fileData);
+        const Artist = await artistasModel.findOne({
+            where: { user_id: artistData.user_id },
+        });
+        res.send({
+            Artist,
+        });
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al crear artista');
+    }
+};
 
-module.exports = { getItems, getItem, createItem, updateItem, deleteItem };
+module.exports = {
+    getItems,
+    getItem,
+    createItem,
+    updateItem,
+    deleteItem,
+    createArtistCtrl,
+};

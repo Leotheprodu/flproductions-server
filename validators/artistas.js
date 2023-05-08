@@ -20,6 +20,23 @@ const validatorCreateItem = [
 
     (req, res, next) => validateResults(req, res, next),
 ];
+const validatorCreateArtist = [
+    check('nombre_artista').exists().notEmpty().isLength({ min: 2, max: 20 }),
+
+    check('instagram').optional().isString(),
+
+    check('spotify').optional().isString(),
+
+    check('info').optional().isString(),
+
+    check('tipo')
+        .exists()
+        .notEmpty()
+        .isIn(['0', '1'])
+        .withMessage('El campo debe ser 0 o 1 (0: productores, 1: cantantes)'),
+
+    (req, res, next) => validateResults(req, res, next),
+];
 const validatorUpdateItem = [
     check('nombre_artista').optional().isLength({ min: 2, max: 20 }),
 
@@ -39,4 +56,9 @@ const validatorGetItem = [
 
     (req, res, next) => validateResults(req, res, next),
 ];
-module.exports = { validatorCreateItem, validatorGetItem, validatorUpdateItem };
+module.exports = {
+    validatorCreateItem,
+    validatorGetItem,
+    validatorUpdateItem,
+    validatorCreateArtist,
+};

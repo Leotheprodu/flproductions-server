@@ -47,9 +47,19 @@ app.use(express.static('storage'));
 app.use(session(sess));
 app.use('/api', require('./routes'));
 
-/* app.use((err, req, res) => {
+/**
+ * Manejo de Errores personalizados
+ */
+app.use(function (err, req, res, next) {
+    if (err.code === 'INVALID_FILE_TYPE') {
+        return res.status(400).json({ error: 'Tipo de archivo no permitido' });
+    }
+
+    next(err);
+});
+app.use((err, req, res) => {
     res.status(500).send({ message: 'Ocurrió un error en el servidor' });
-}); */
+});
 
 const server = app.listen(PUERTO, () => {
     console.log(`El servidor esta escuchando en el puerto ${PUERTO}...`);
