@@ -121,12 +121,10 @@ const createArtistCtrl = async (req, res) => {
         };
         await artistasModel.create(artistData);
         await storageModel.create(fileData);
-        const Artist = await artistasModel.findOne({
+        const artist = await artistasModel.findOne({
             where: { user_id: artistData.user_id },
         });
-        res.send({
-            Artist,
-        });
+        res.send({ message: 'Artista Creado Exitosamente', artist });
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al crear artista');

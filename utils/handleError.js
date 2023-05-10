@@ -5,7 +5,7 @@
  * @param {*} code
  */
 const handleHttpError = (res, message = 'Algo ha salido mal', code = 403) => {
-    res.status(code).send({ error: message });
+    res.status(code).send({ message });
 };
 
 module.exports = { handleHttpError };
