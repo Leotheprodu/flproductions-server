@@ -124,7 +124,7 @@ const createArtistCtrl = async (req, res) => {
 
         await artistasModel.create(artistData);
         await storageModel.create(fileData);
-        await RefreshSessionData(req, artistData.user_id);
+        await RefreshSessionData(req);
         resUsersSessionData(req, res, 'Artista creado exitosamente');
     } catch (error) {
         console.error(error);
