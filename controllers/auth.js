@@ -15,7 +15,8 @@ const {
     deleteTempNoToken,
 } = require('../utils/handleTempToken');
 const { sendAEmail } = require('../utils/handleSendEmail');
-const { refreshUserRoles } = require('../utils/handleRoles');
+const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
+const { resUsersSessionData } = require('../utils/handleOkResponses');
 const registerCtrl = async (req, res) => {
     try {
         //Importa la data suministrada por el cliente ya filtrada
@@ -77,12 +78,7 @@ const registerCtrl = async (req, res) => {
 const loginCtrl = async (req, res) => {
     try {
         if (req.session.isLoggedIn) {
-            res.status(200).send({
-                message: 'Has Iniciado Sesion!',
-                isLoggedIn: true,
-                user: req.session.user,
-                roles: req.session.roles,
-            });
+            resUsersSessionData(req, res, 'Ya has iniciado Sesion');
             return;
         }
         //Importa la data suministrada por el cliente ya filtrada
@@ -120,19 +116,10 @@ const loginCtrl = async (req, res) => {
                 maxAge: 3600000,
             });
         }
-
-        const datoUsuarioSinPassword = await usuariosModel.findOne({
-            where: { email },
-        });
+        req.session.user = datosUsuario;
         req.session.isLoggedIn = true;
-        req.session.roles = await refreshUserRoles(datosUsuario.id);
-        req.session.user = datoUsuarioSinPassword;
-        res.status(200).send({
-            message: 'Inicio de sesión exitoso!',
-            isLoggedIn: true,
-            user: req.session.user,
-            roles: req.session.roles,
-        });
+        await RefreshSessionData(req);
+        resUsersSessionData(req, res, 'Inicio de Sesion existoso');
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al autentificar el usuario');
@@ -141,12 +128,7 @@ const loginCtrl = async (req, res) => {
 const logoutCtrl = async (req, res) => {
     try {
         req.session.isLoggedIn = false;
-        res.status(200).json({
-            message: 'Cierre de sesión exitoso!',
-            isLoggedIn: false,
-            user: req.session.user,
-            roles: req.session.roles,
-        });
+        resUsersSessionData(req, res, 'Cierre de Sesion existoso');
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al intenta desloguear al usuario');
@@ -155,16 +137,12 @@ const logoutCtrl = async (req, res) => {
 const ckeckSessCtrl = async (req, res) => {
     try {
         if (req.session.isLoggedIn) {
-            req.session.user = await usuariosModel.findByPk(
-                req.session.user.id
+            await RefreshSessionData(req);
+            resUsersSessionData(
+                req,
+                res,
+                'Session Iniciada, Datos Actualizados'
             );
-            req.session.roles = await refreshUserRoles(req.session.user.id);
-            res.status(200).send({
-                message: 'El usuario ha iniciado sesion',
-                isLoggedIn: true,
-                user: req.session.user,
-                roles: req.session.roles,
-            });
         } else {
             res.status(200).send({
                 message: 'El usuario no ha iniciado sesion',

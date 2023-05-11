@@ -2,6 +2,8 @@ const { matchedData } = require('express-validator');
 const { artistasModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { storageModel } = require('../models');
+const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
+const { resUsersSessionData } = require('../utils/handleOkResponses');
 const PUBLIC_URL = process.env.PUBLIC_URL;
 /**
  * Obtener la base de datos!
@@ -119,12 +121,11 @@ const createArtistCtrl = async (req, res) => {
             imagen: fileData.url,
             user_id: fileData.user_id,
         };
+
         await artistasModel.create(artistData);
         await storageModel.create(fileData);
-        const artist = await artistasModel.findOne({
-            where: { user_id: artistData.user_id },
-        });
-        res.send({ message: 'Artista Creado Exitosamente', artist });
+        await RefreshSessionData(req, artistData.user_id);
+        resUsersSessionData(req, res, 'Artista creado exitosamente');
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al crear artista');

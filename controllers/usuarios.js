@@ -1,7 +1,8 @@
 const { matchedData } = require('express-validator');
 const { usuariosModel, avatar_usersModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
-const { refreshUserRoles, addUserRoles } = require('../utils/handleRoles');
+const { addUserRoles } = require('../utils/handleRoles');
+const { resOkData } = require('../utils/handleOkResponses');
 
 /**
  * Obtener la base de datos!
@@ -37,14 +38,8 @@ const getItem = async (req, res) => {
             const data = await usuariosModel.findByPk(id, {
                 attributes: { exclude: ['password'] },
             });
-            req.session.user = data;
-            req.session.roles = await refreshUserRoles(data.id);
-            res.status(200).send({
-                message: 'Datos de usuario generados con exito',
-                isLoggedIn: true,
-                user: req.session.user,
-                roles: req.session.roles,
-            });
+
+            resOkData(res, data);
         } else {
             handleHttpError(
                 res,

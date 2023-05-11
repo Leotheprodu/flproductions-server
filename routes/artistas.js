@@ -19,6 +19,10 @@ const rateLimiter = require('../config/rate-limit');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 const { uploadMiddleware, resizeImage } = require('../utils/handleStorage');
 const stringToInteger = require('../middleware/stringToInteger');
+const {
+    checkSingleArtist,
+    checkArtistExist,
+} = require('../middleware/checkSingleArtista');
 
 /* Lista los items */
 router.get('/', getItems);
@@ -52,9 +56,11 @@ router.delete(
 );
 router.post(
     '/create-artist',
+    checkSingleArtist,
     isLoggedInTrue,
     checkRoles([3, 4]),
     uploadMiddleware(['jpg', 'aviff', 'webp', 'png']).single('imagen'),
+    checkArtistExist,
     resizeImage,
     stringToInteger(['tipo']),
     validatorCreateArtist,
