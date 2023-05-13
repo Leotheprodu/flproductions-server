@@ -6,7 +6,11 @@ const validateResults = (req, res, next) => {
         return next();
     } catch (err) {
         res.status(403);
-        res.send({ errors: err.array() });
+        res.send({
+            error: err.array(),
+            message:
+                'Revisa que los campos del formulario cumplan los requisitos',
+        });
     }
 };
 module.exports = validateResults;

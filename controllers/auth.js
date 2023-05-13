@@ -283,7 +283,6 @@ const verifyEmailCtrl = async (req, res) => {
         const token = await newToken();
         await deleteTempNoToken(email, 'role');
         await createTempToken(token, email, 'role');
-
         const link = `${process.env.LINK_HOST}/verificar-email/${token}`;
         const from = {
             name: 'FLProductions',
@@ -304,20 +303,29 @@ const verifyEmailCtrl = async (req, res) => {
     }
 };
 const emailVerifyCtrl = async (req, res) => {
+    async function tempToken(token) {
+        try {
+            const result = await temp_token_poolModel.findOne({
+                where: { token, type: 'role' },
+            });
+            return result;
+        } catch (error) {
+            handleHttpError(res, 'INVALID_TOKEN');
+        }
+    }
     try {
         const { token } = matchedData(req);
-        const tempToken = await temp_token_poolModel.findOne({
-            where: { token, type: 'role' },
+        const tempTokenData = await tempToken(token);
+        const userData = await usuariosModel.findOne({
+            where: { email: tempTokenData.user_email },
         });
-        const UserData = await usuariosModel.findOne({
-            where: { email: tempToken.user_email },
-        });
-        tempToken.destroy();
-        await role_usersModel.create({ user_id: UserData.id, role_id: 1 });
-        await avatar_usersModel.create({ user_id: UserData.id, avatar: 8 });
-        res.send({ message: 'EMAIL_VERIFIED', email: UserData.email });
+        await tempTokenData.destroy();
+        await role_usersModel.create({ user_id: userData.id, role_id: 1 });
+        await avatar_usersModel.create({ user_id: userData.id, avatar: 8 });
+        res.send({ message: 'EMAIL_VERIFIED', email: userData.email });
     } catch (error) {
-        handleHttpError(res, 'INVALID_TOKEN');
+        console.log(error);
+        handleHttpError(res, 'Error_Verifying_Email');
     }
 };
 
