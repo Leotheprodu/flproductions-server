@@ -132,6 +132,21 @@ const createArtistCtrl = async (req, res) => {
         handleHttpError(res, 'Error al crear artista');
     }
 };
+const updateArtistTextCtrl = async (req, res) => {
+    try {
+        const data = matchedData(req);
+
+        await artistasModel.update(data, {
+            where: { user_id: req.session.user.id },
+        });
+        await RefreshSessionData(req);
+        console.log(data);
+        resOkData(res, data);
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al cambiar texto de artista');
+    }
+};
 const updateArtistImageCtrl = async (req, res) => {
     try {
         const { file } = req;
@@ -161,6 +176,7 @@ const updateArtistImageCtrl = async (req, res) => {
                 imagen: fileData.url,
             });
             await storageModel.create(fileData);
+            await RefreshSessionData(req);
             resOkData(res, { imagen: fileData.url });
             return;
         }
@@ -172,6 +188,7 @@ const updateArtistImageCtrl = async (req, res) => {
             imagen: fileData.url,
         });
         await storageModel.create(fileData);
+        await RefreshSessionData(req);
         resOkData(res, { imagen: fileData.url });
     } catch (error) {
         console.error(error);
@@ -190,4 +207,5 @@ module.exports = {
     deleteItem,
     createArtistCtrl,
     updateArtistImageCtrl,
+    updateArtistTextCtrl,
 };

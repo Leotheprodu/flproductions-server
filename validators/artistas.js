@@ -37,6 +37,17 @@ const validatorCreateArtist = [
 
     (req, res, next) => validateResults(req, res, next),
 ];
+const validatorUpdateArtistText = [
+    check('nombre_artista').optional().isLength({ min: 2, max: 20 }),
+
+    check('instagram').optional().isString(),
+
+    check('spotify').optional().isString(),
+
+    check('info').optional().isString(),
+
+    (req, res, next) => validateResults(req, res, next),
+];
 const validatorUpdateItem = [
     check('nombre_artista').optional().isLength({ min: 2, max: 20 }),
 
@@ -61,4 +72,5 @@ module.exports = {
     validatorGetItem,
     validatorUpdateItem,
     validatorCreateArtist,
+    validatorUpdateArtistText,
 };

@@ -8,12 +8,14 @@ const {
     deleteItem,
     createArtistCtrl,
     updateArtistImageCtrl,
+    updateArtistTextCtrl,
 } = require('../controllers/artistas');
 const {
     validatorCreateItem,
     validatorGetItem,
     validatorUpdateItem,
     validatorCreateArtist,
+    validatorUpdateArtistText,
 } = require('../validators/artistas');
 const { checkRoles } = require('../middleware/roles');
 const rateLimiter = require('../config/rate-limit');
@@ -74,6 +76,13 @@ router.put(
     uploadMiddleware(['jpg', 'aviff', 'webp', 'png']).single('imagen'),
     resizeImage,
     updateArtistImageCtrl
+);
+router.put(
+    '/update-artist/text',
+    isLoggedInTrue,
+    checkRoles([3, 4]),
+    validatorUpdateArtistText,
+    updateArtistTextCtrl
 );
 
 module.exports = router;
