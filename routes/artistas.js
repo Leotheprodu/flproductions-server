@@ -7,6 +7,7 @@ const {
     updateItem,
     deleteItem,
     createArtistCtrl,
+    updateArtistImageCtrl,
 } = require('../controllers/artistas');
 const {
     validatorCreateItem,
@@ -65,6 +66,14 @@ router.post(
     stringToInteger(['tipo']),
     validatorCreateArtist,
     createArtistCtrl
+);
+router.put(
+    '/update-artist/image',
+    isLoggedInTrue,
+    checkRoles([3, 4]),
+    uploadMiddleware(['jpg', 'aviff', 'webp', 'png']).single('imagen'),
+    resizeImage,
+    updateArtistImageCtrl
 );
 
 module.exports = router;

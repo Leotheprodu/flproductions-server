@@ -20,7 +20,7 @@ const resUsersSessionData = (req, res, message) => {
  */
 const resOkData = (res, data) => {
     res.send({
-        data,
+        ...data,
     });
 };
 

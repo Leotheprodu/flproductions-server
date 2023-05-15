@@ -3,8 +3,9 @@ const { artistasModel } = require('../models');
 const { handleHttpError } = require('../utils/handleError');
 const { storageModel } = require('../models');
 const { RefreshSessionData } = require('../utils/handleRefreshSessionData');
-const { resUsersSessionData } = require('../utils/handleOkResponses');
+const { resOkData } = require('../utils/handleOkResponses');
 const PUBLIC_URL = process.env.PUBLIC_URL;
+const fs = require('fs');
 /**
  * Obtener la base de datos!
  * @param {*} req
@@ -125,10 +126,59 @@ const createArtistCtrl = async (req, res) => {
         await artistasModel.create(artistData);
         await storageModel.create(fileData);
         await RefreshSessionData(req);
-        resUsersSessionData(req, res, 'Artista creado exitosamente');
+        resOkData(res, artistData);
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al crear artista');
+    }
+};
+const updateArtistImageCtrl = async (req, res) => {
+    try {
+        const { file } = req;
+        const fileData = {
+            id: file.filename.split('.').shift(),
+            filename: file.filename,
+            url: `${PUBLIC_URL}/${req.session.user.id}/${file.filename}`,
+            originalname: file.originalname.split('.').shift(),
+            ext: file.filename.split('.').pop(),
+            user_id: req.session.user.id,
+        };
+        const userId = req.session.user.id;
+        const artist = await artistasModel.findOne({
+            where: { user_id: userId },
+        });
+        if (!artist) {
+            const imagenCargada = `${__dirname}/../storage/${userId}/${file.filename}`;
+            fs.unlinkSync(imagenCargada);
+            handleHttpError(res, 'No Existe el Artista');
+            return;
+        }
+        const lastImage = await storageModel.findOne({
+            where: { url: artist.imagen },
+        });
+        if (!lastImage) {
+            await artist.update({
+                imagen: fileData.url,
+            });
+            await storageModel.create(fileData);
+            resOkData(res, { imagen: fileData.url });
+            return;
+        }
+        const MEDIA_PATH = `${__dirname}/../storage/${userId}`;
+        const filePath = `${MEDIA_PATH}/${lastImage.filename}`;
+        fs.unlinkSync(filePath);
+        await lastImage.destroy();
+        await artist.update({
+            imagen: fileData.url,
+        });
+        await storageModel.create(fileData);
+        resOkData(res, { imagen: fileData.url });
+    } catch (error) {
+        console.error(error);
+        const { file } = req;
+        const imagenCargada = `${__dirname}/../storage/${req.session.user.id}/${file.filename}`;
+        fs.unlinkSync(imagenCargada);
+        handleHttpError(res, 'Error al actualizar imagen de artista');
     }
 };
 
@@ -139,4 +189,5 @@ module.exports = {
     updateItem,
     deleteItem,
     createArtistCtrl,
+    updateArtistImageCtrl,
 };
