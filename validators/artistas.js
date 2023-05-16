@@ -45,6 +45,11 @@ const validatorUpdateArtistText = [
     check('spotify').optional().isString(),
 
     check('info').optional().isString(),
+    check('tipo')
+        .exists()
+        .notEmpty()
+        .isIn(['0', '1'])
+        .withMessage('El campo debe ser 0 o 1 (0: productores, 1: cantantes)'),
 
     (req, res, next) => validateResults(req, res, next),
 ];

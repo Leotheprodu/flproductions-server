@@ -137,7 +137,7 @@ const updateArtistTextCtrl = async (req, res) => {
         const data = matchedData(req);
 
         await artistasModel.update(data, {
-            where: { user_id: req.session.user.id },
+            where: { user_id: req.session.user.id, tipo: data.tipo },
         });
         await RefreshSessionData(req);
         console.log(data);
@@ -150,6 +150,16 @@ const updateArtistTextCtrl = async (req, res) => {
 const updateArtistImageCtrl = async (req, res) => {
     try {
         const { file } = req;
+        const { tipo } = matchedData(req);
+
+        if (!file) {
+            handleHttpError(
+                res,
+                'Solo formatos de archivo aceptados, intenta de nuevo'
+            );
+            return;
+        }
+        console.log(tipo);
         const fileData = {
             id: file.filename.split('.').shift(),
             filename: file.filename,
@@ -160,7 +170,7 @@ const updateArtistImageCtrl = async (req, res) => {
         };
         const userId = req.session.user.id;
         const artist = await artistasModel.findOne({
-            where: { user_id: userId },
+            where: { user_id: userId, tipo },
         });
         if (!artist) {
             const imagenCargada = `${__dirname}/../storage/${userId}/${file.filename}`;

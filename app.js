@@ -57,6 +57,15 @@ app.use(function (err, req, res, next) {
 
     next(err);
 });
+app.use(function (err, req, res, next) {
+    if (err.code === 'FILE_SIZE_LIMIT_EXCEEDED') {
+        return res
+            .status(400)
+            .json({ error: 'Tamaño de archivo excede el limite' });
+    }
+
+    next(err);
+});
 app.use((err, req, res) => {
     res.status(500).send({ message: 'Ocurrió un error en el servidor' });
 });

@@ -75,12 +75,15 @@ router.put(
     checkRoles([3, 4]),
     uploadMiddleware(['jpg', 'aviff', 'webp', 'png']).single('imagen'),
     resizeImage,
+    stringToInteger(['tipo']),
+    validatorUpdateArtistText,
     updateArtistImageCtrl
 );
 router.put(
     '/update-artist/text',
     isLoggedInTrue,
     checkRoles([3, 4]),
+    stringToInteger(['tipo']),
     validatorUpdateArtistText,
     updateArtistTextCtrl
 );
