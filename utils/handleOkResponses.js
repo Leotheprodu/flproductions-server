@@ -6,7 +6,7 @@
  */
 const resUsersSessionData = (req, res, message) => {
     res.send({
-        isLoggedIn: req.session.isLoggedIn,
+        isLoggedIn: true,
         user: req.session.user,
         roles: req.session.roles,
         artista: req.session.artista,

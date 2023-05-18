@@ -268,7 +268,7 @@ const updateUsersCtrl = async (req, res) => {
         //respondemos la solicitud
         res.send({
             message: 'actualizado con exito',
-            usuario: userActualizado,
+            user: userActualizado,
         });
     } catch (error) {
         console.error(error);

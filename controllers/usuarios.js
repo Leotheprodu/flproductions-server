@@ -108,19 +108,12 @@ const deleteItem = async (req, res) => {
 const avatarCtrl = async (req, res) => {
     try {
         const { id } = matchedData(req);
-        const data = await avatar_usersModel.findOne({
-            where: { user_id: id },
-        });
+        const data = await avatar_usersModel.findOneData(id);
 
-        res.status(200).json({
-            message: 'avatar encontrado',
-            avatar: data.avatar,
-        });
+        res.status(200).json(data);
     } catch (error) {
-        res.status(200).json({
-            message: 'avatar no Encontrado',
-            avatar: 8,
-        });
+        console.log(error);
+        return handleHttpError(res, 'Avatar no encontrado', 401);
     }
 };
 const avatarUpdateCtrl = async (req, res) => {
@@ -133,8 +126,11 @@ const avatarUpdateCtrl = async (req, res) => {
         const userAvatar = await avatar_usersModel.findOne({
             where: { user_id: id },
         });
-        await userAvatar.update({ avatar });
-        req.session.avatar = avatar;
+        if (!userAvatar) {
+            await avatar_usersModel.create({ user_id: id, avatar });
+        } else {
+            await userAvatar.update({ avatar });
+        }
         res.status(200).json({
             message: 'avatar actualizado',
             avatar: userAvatar.avatar,
