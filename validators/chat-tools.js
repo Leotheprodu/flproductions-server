@@ -7,5 +7,10 @@ const validatorSongIdeas = [
 
     (req, res, next) => validateResults(req, res, next),
 ];
+const validatorFaq = [
+    check('pregunta').exists().isString().notEmpty(),
 
-module.exports = { validatorSongIdeas };
+    (req, res, next) => validateResults(req, res, next),
+];
+
+module.exports = { validatorSongIdeas, validatorFaq };

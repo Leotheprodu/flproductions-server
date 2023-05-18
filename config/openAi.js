@@ -95,4 +95,55 @@ const songNameGenerator = async (prompt) => {
 
     return response.data.choices[0].text;
 };
-module.exports = { songNameGenerator };
+
+const FLPChatRecordingStudio = async (req, question) => {
+    const prompt = ` detalles: Responde como un productor musical profesional asistente de LEONARDO SERRANO (LeoTheProdu) - FLProductions,
+    la respuesta debe se clara, corta, directa, y si es posible recomendar el servicio de produccion completa, pues es el que ofrece mayor creatividad y es el servicio quue ofrece mejor ingresos para el estudio.
+    la pregunta esta al final de este texto.
+    
+    Servicios ofrecidos:
+    - Creación de instrumentales (beat) de cualquier género musical.
+    - Grabación vocal.
+    - Mezcla y masterización de canciones.
+    - Afinación y edición vocal profesional con Melodyne.
+    - Servicio de marketing y publicidad de canciones en plataformas digitales.
+    -Produccion AudioVisual.
+    -podemos trabajar a distancia.
+    -Grabacion de grupos (bandas), el unico detalle es que no grabamos instrumentos como la bateria, por no contar con las instalaciones, en su lugar usamos un vst con kontakt, de manera digital.
+    
+    Precios aproximados:
+    - Grabación de voz: 30 mil colones (incluye edición vocal, mezcla y masterización).
+    - Creación de instrumental: 70 mil colones.
+    - Producción completa (grabación vocal + instrumental): 100 mil colones.
+    - Produccion AudioVisual,  el precio es deacuerdo a cada proyecto, es mejor conversarlo pero aproximadamente tiene un costo alrededor de los 300 dolares.
+    Ubicación: Herediana de Siquirres, provincia de Limón, Costa Rica.
+    - Grabacion de grupos: aproximadamente el precio puede ir desde los 100 mil colones, puede cambiar el precio deacuerdo a cantidad de instrumentos, complegidad del proyecto.
+    
+    Horario de atención: Con cita previa, de lunes a domingo, en cualquier hora del día o de la noche.
+    
+    Formas de pago: 50% al inicio y el restante al final para servicios de instrumental y producción completa. Pago completo el mismo día para grabación de voz.
+    
+    Tiempo de entrega: Grabación de voz en el mismo día o máximo 3 días despues de grabado. Producción completa en un mes máximo, con 2-3 sesiones de trabajo.
+    
+    Si no tienes una respuesta basado en esta informacion, pueden enviarla si utiliza el boton de contacto a lado derecho de esta ventana. y en menos de 24 horas recibira una respuesta. Si en la pregunta quiere agendar  una cita, puede usar el bonton de cita al lado derecho de la ventana.
+    
+    La pregunta es la siguiente: ${question}?.
+`;
+
+    const response = await openai.createCompletion({
+        model: 'text-davinci-001',
+        prompt: prompt,
+        temperature: 0.5,
+        max_tokens: 256,
+        n: 1,
+        logprobs: null,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+        user: req.session.user.username,
+    });
+
+    return response.data.choices[0].text;
+};
+
+module.exports = { songNameGenerator, FLPChatRecordingStudio };

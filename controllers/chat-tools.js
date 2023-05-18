@@ -1,5 +1,8 @@
 const { matchedData } = require('express-validator');
-const { songNameGenerator } = require('../config/openAi');
+const {
+    songNameGenerator,
+    FLPChatRecordingStudio,
+} = require('../config/openAi');
 const { handleHttpError } = require('../utils/handleError');
 
 /**
@@ -18,5 +21,25 @@ const songNameGeneratorCtrl = async (req, res) => {
         handleHttpError(res, 'HUBO_UN_PROBLEMA');
     }
 };
+const FLPChatRecordingStudioCtrl = async (req, res) => {
+    try {
+        const { pregunta } = matchedData(req);
+        const respuesta = await FLPChatRecordingStudio(req, pregunta);
+        if (!respuesta) {
+            handleHttpError(
+                res,
+                'Hay un problema con el chat de la seccion de preguntas y respuestas, intenta enviar directamente la pregunta en la parte de contactenos'
+            );
+            return;
+        }
+        res.send({ respuesta });
+    } catch (error) {
+        console.log(error);
+        handleHttpError(
+            res,
+            'Hay un problema con el chat de la seccion de preguntas y respuestas, intenta enviar directamente la pregunta en la parte de contactenos'
+        );
+    }
+};
 
-module.exports = { songNameGeneratorCtrl };
+module.exports = { songNameGeneratorCtrl, FLPChatRecordingStudioCtrl };

@@ -6,11 +6,13 @@
  */
 const resUsersSessionData = (req, res, message) => {
     res.send({
-        message,
         isLoggedIn: req.session.isLoggedIn,
         user: req.session.user,
         roles: req.session.roles,
         artista: req.session.artista,
+        userMessage: {
+            message,
+        },
     });
 };
 /**
