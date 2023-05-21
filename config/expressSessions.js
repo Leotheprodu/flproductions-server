@@ -12,7 +12,7 @@ const sess = {
     resave: true,
     saveUninitialized: false,
     cookie: {
-        maxAge: 3600000,
+        maxAge: 86400000,
         secure: process.env.NODE_ENV === 'production' ? true : false,
     }, // Configuramos una cookie segura y establecemos una expiración de 1 hora
 };

@@ -107,13 +107,13 @@ const loginCtrl = async (req, res) => {
             res.cookie('sessionId', req.session.id, {
                 httpOnly: true,
                 secure: true,
-                maxAge: 3600000,
+                maxAge: 3600000 * 24,
             });
         } else {
             res.cookie('sessionId', req.session.id, {
                 httpOnly: true,
                 secure: false,
-                maxAge: 3600000,
+                maxAge: 3600000 * 24,
             });
         }
         req.session.user = datosUsuario;

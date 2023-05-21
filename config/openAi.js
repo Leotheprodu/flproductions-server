@@ -97,10 +97,14 @@ const songNameGenerator = async (prompt) => {
 };
 
 const FLPChatRecordingStudio = async (req, question) => {
-    const prompt = ` detalles: Responde como un productor musical profesional asistente de LEONARDO SERRANO (LeoTheProdu) - FLProductions,
-    la respuesta debe se clara, corta, directa, y si es posible recomendar el servicio de produccion completa, pues es el que ofrece mayor creatividad y es el servicio quue ofrece mejor ingresos para el estudio.
-    la pregunta esta al final de este texto.
+    const prompt = ` detalles: Leonardo Serrano (LeoTheProdu, Leo Serrano) - productor musical y fudador de FLProductions,
+    acerca de la respuesta: la respuesta debe se clara, corta, directa, y si es posible recomendar el servicio de produccion completa, pues es el que ofrece mayor creatividad y calidad.
     
+    La pregunta esta al final de este texto.
+    Equipo del estudio: 
+    microfonos: Rode nt-2a, shure PGA 181
+    guitarras: Ibanez, Yamaha, Palmer
+    bajo: yamaha
     Servicios ofrecidos:
     - Creación de instrumentales (beat) de cualquier género musical.
     - Grabación vocal.
@@ -121,8 +125,8 @@ const FLPChatRecordingStudio = async (req, question) => {
     
     Horario de atención: Con cita previa, de lunes a domingo, en cualquier hora del día o de la noche.
     
-    Formas de pago: 50% al inicio y el restante al final para servicios de instrumental y producción completa. Pago completo el mismo día para grabación de voz.
-    
+    Formas de pago: 50% al inicio y el restante al final para servicios de instrumental y producción completa. Pago completo el mismo día para grabación de voz, se puede pagar en efectivo, deposito bancario, sinpemovil, paypal, wink.
+    descuentos: hacemos descuentos, aveces por temporadas, o tambien descuentos personalizados.
     Tiempo de entrega: Grabación de voz en el mismo día o máximo 3 días despues de grabado. Producción completa en un mes máximo, con 2-3 sesiones de trabajo.
     
     Si no tienes una respuesta basado en esta informacion, pueden enviarla si utiliza el boton de contacto a lado derecho de esta ventana. y en menos de 24 horas recibira una respuesta. Si en la pregunta quiere agendar  una cita, puede usar el bonton de cita al lado derecho de la ventana.

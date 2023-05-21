@@ -9,6 +9,7 @@ const validatorSongIdeas = [
 ];
 const validatorFaq = [
     check('pregunta').exists().isString().notEmpty(),
+    check('other_user_id').exists().isNumeric().notEmpty(),
 
     (req, res, next) => validateResults(req, res, next),
 ];

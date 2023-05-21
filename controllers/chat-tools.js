@@ -4,6 +4,7 @@ const {
     FLPChatRecordingStudio,
 } = require('../config/openAi');
 const { handleHttpError } = require('../utils/handleError');
+const { chat_faqModel } = require('../models');
 
 /**
  * Obtener un detalle!
@@ -23,8 +24,9 @@ const songNameGeneratorCtrl = async (req, res) => {
 };
 const FLPChatRecordingStudioCtrl = async (req, res) => {
     try {
-        const { pregunta } = matchedData(req);
+        const { pregunta, other_user_id } = matchedData(req);
         const respuesta = await FLPChatRecordingStudio(req, pregunta);
+        /* const respuesta = `respuesta del chatgpt ${Date.now()}`; */
         if (!respuesta) {
             handleHttpError(
                 res,
@@ -32,6 +34,13 @@ const FLPChatRecordingStudioCtrl = async (req, res) => {
             );
             return;
         }
+
+        await chat_faqModel.create({
+            pregunta,
+            respuesta,
+            user_id: req.session.user.id,
+            other_user_id,
+        });
         res.send({ respuesta });
     } catch (error) {
         console.log(error);
@@ -41,5 +50,22 @@ const FLPChatRecordingStudioCtrl = async (req, res) => {
         );
     }
 };
+const ShowResponsesCtrl = async (req, res) => {
+    try {
+        const user_id = req.session.user.id;
+        const data = await chat_faqModel.findAll({ where: { user_id } });
+        if (!data) {
+            handleHttpError(res, 'El Usuario no ha iniciado una conversacion');
+        }
+        res.send(data);
+    } catch (error) {
+        console.log(error);
+        handleHttpError(res, 'hubo un problema al cargar el chat');
+    }
+};
 
-module.exports = { songNameGeneratorCtrl, FLPChatRecordingStudioCtrl };
+module.exports = {
+    songNameGeneratorCtrl,
+    FLPChatRecordingStudioCtrl,
+    ShowResponsesCtrl,
+};
