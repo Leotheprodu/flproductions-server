@@ -137,7 +137,7 @@ const FLPChatRecordingStudio = async (req, question) => {
     const response = await openai.createCompletion({
         model: 'text-davinci-001',
         prompt: prompt,
-        temperature: 0.5,
+        temperature: 0.7,
         max_tokens: 256,
         n: 1,
         logprobs: null,
