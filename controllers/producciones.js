@@ -1,4 +1,5 @@
 const { produccionesModel } = require('../models');
+const { matchedData } = require('express-validator');
 const { handleHttpError } = require('../utils/handleError');
 
 /**
@@ -11,6 +12,24 @@ const getItems = async (req, res) => {
     try {
         const producciones = await produccionesModel.findAllData();
         res.status(200).send({ producciones });
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al cargar las producciones');
+    }
+};
+/**
+ * Obtener la base de datos!
+ * @param {*} req
+ * @param {*} res
+
+*/
+const getItemsByArtist = async (req, res) => {
+    try {
+        const { id_artista } = matchedData(req);
+        const producciones = await produccionesModel.findAll({
+            where: { id_artista },
+        });
+        res.status(200).send(producciones);
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al cargar las producciones');
@@ -49,4 +68,11 @@ const updateItem = async () => {};
 */
 const deleteItem = async () => {};
 
-module.exports = { getItems, getItem, createItem, updateItem, deleteItem };
+module.exports = {
+    getItems,
+    getItem,
+    createItem,
+    updateItem,
+    deleteItem,
+    getItemsByArtist,
+};
