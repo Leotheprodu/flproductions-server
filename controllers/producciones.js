@@ -35,6 +35,36 @@ const getItemsByArtist = async (req, res) => {
         handleHttpError(res, 'Error al cargar las producciones');
     }
 };
+const saveSongData = async (req, res) => {
+    try {
+        const songData = matchedData(req);
+
+        try {
+            await produccionesModel.update(songData, {
+                where: { id: songData.id, id_artista: req.session.artista.id },
+            });
+            res.status(200).send({
+                message: `cancion con id ${songData.id} actualizada con exito`,
+            });
+        } catch (error) {
+            console.error(error);
+
+            await produccionesModel.create({
+                ...songData,
+                id_artista: req.session.artista.id,
+                destacado: 0,
+                tipo_obra: req.session.artista.tipo === 1 ? 0 : 1,
+            });
+            res.status(200).send({ message: `cancion creada con exito` });
+        }
+    } catch (error) {
+        console.error(error);
+        handleHttpError(
+            res,
+            'Error al intentar agregar o actualizar produccion musical'
+        );
+    }
+};
 
 /**
  * Obtener un detalle!
@@ -75,4 +105,5 @@ module.exports = {
     updateItem,
     deleteItem,
     getItemsByArtist,
+    saveSongData,
 };
