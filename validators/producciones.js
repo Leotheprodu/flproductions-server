@@ -6,6 +6,12 @@ const validatorId_artista = [
 
     (req, res, next) => validateResults(req, res, next),
 ];
+const validatorDeleteSong = [
+    check('id').exists().notEmpty(),
+    check('nombre').exists().notEmpty().isString(),
+
+    (req, res, next) => validateResults(req, res, next),
+];
 const validatorHandleproduccion = [
     check('id').optional(),
     check('nombre').exists().notEmpty().isString(),
@@ -27,4 +33,5 @@ const validatorHandleproduccion = [
 module.exports = {
     validatorId_artista,
     validatorHandleproduccion,
+    validatorDeleteSong,
 };

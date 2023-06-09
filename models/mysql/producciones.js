@@ -68,7 +68,7 @@ Producciones.findAllData = function () {
     Producciones.belongsTo(Artistas, {
         foreignKey: 'id_artista',
     });
-    return Producciones.findAll({ include: Artistas });
+    return Producciones.findAll({ include: Artistas, order: [['id', 'DESC']] });
 };
 
 module.exports = Producciones;

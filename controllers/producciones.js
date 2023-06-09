@@ -35,6 +35,21 @@ const getItemsByArtist = async (req, res) => {
         handleHttpError(res, 'Error al cargar las producciones');
     }
 };
+const deleteSongCtrl = async (req, res) => {
+    try {
+        const songInfo = matchedData(req);
+        const song = await produccionesModel.findOne({
+            where: { id: songInfo.id },
+        });
+        if (song.id_artista === req.session.artista.id) {
+            song.destroy();
+            res.status(200).send({ message: 'Cancion eliminada con exito' });
+        }
+    } catch (error) {
+        console.error(error);
+        handleHttpError(res, 'Error al intentar eliminar cancion');
+    }
+};
 const saveSongData = async (req, res) => {
     try {
         const songData = matchedData(req);
@@ -106,4 +121,5 @@ module.exports = {
     deleteItem,
     getItemsByArtist,
     saveSongData,
+    deleteSongCtrl,
 };

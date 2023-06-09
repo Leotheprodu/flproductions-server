@@ -4,10 +4,12 @@ const {
     getItems,
     getItemsByArtist,
     saveSongData,
+    deleteSongCtrl,
 } = require('../controllers/producciones');
 const {
     validatorId_artista,
     validatorHandleproduccion,
+    validatorDeleteSong,
 } = require('../validators/producciones');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
 
@@ -20,5 +22,5 @@ router.get(
     getItemsByArtist
 );
 router.post('/handle', isLoggedInTrue, validatorHandleproduccion, saveSongData);
-
+router.delete('/delete', isLoggedInTrue, validatorDeleteSong, deleteSongCtrl);
 module.exports = router;
