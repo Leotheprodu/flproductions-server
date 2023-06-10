@@ -3,11 +3,14 @@ const { handleHttpError } = require('../utils/handleError');
 
 const checkSingleArtist = async (req, res, next) => {
     try {
-        const checkArtist = await artistasModel.findOne({
+        const checkArtist = await artistasModel.findAll({
             where: { user_id: req.session.user.id },
         });
-        if (checkArtist) {
-            return handleHttpError(res, 'El Usuario ya tiene un artista');
+        if (checkArtist.lenght >= 2) {
+            return handleHttpError(
+                res,
+                'Has alcanzado la maxima cantidad de artistas'
+            );
         } else {
             next();
         }

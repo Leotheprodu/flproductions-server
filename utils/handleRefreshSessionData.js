@@ -6,7 +6,7 @@ const RefreshSessionData = async (req) => {
     req.session.artista = null;
 
     req.session.artista =
-        (await artistasModel.findOne({
+        (await artistasModel.findAll({
             where: { user_id: id },
         })) || null;
 

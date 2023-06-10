@@ -122,11 +122,10 @@ const createArtistCtrl = async (req, res) => {
             imagen: fileData.url,
             user_id: fileData.user_id,
         };
-
         await artistasModel.create(artistData);
         await storageModel.create(fileData);
         await RefreshSessionData(req);
-        resOkData(res, artistData);
+        resOkData(res, req.session.artista);
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al crear artista');
@@ -141,7 +140,7 @@ const updateArtistTextCtrl = async (req, res) => {
         });
         await RefreshSessionData(req);
         console.log(data);
-        resOkData(res, data);
+        resOkData(res, { data });
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al cambiar texto de artista');

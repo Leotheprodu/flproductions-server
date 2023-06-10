@@ -21,9 +21,7 @@ const resUsersSessionData = (req, res, message) => {
  * @param {object} data
  */
 const resOkData = (res, data) => {
-    res.send({
-        ...data,
-    });
+    res.send(data);
 };
 
 module.exports = { resUsersSessionData, resOkData };

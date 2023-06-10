@@ -39,7 +39,7 @@ const getItem = async (req, res) => {
                 attributes: { exclude: ['password'] },
             });
 
-            resOkData(res, data);
+            resOkData(res, { data });
         } else {
             handleHttpError(
                 res,

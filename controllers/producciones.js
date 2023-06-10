@@ -41,7 +41,9 @@ const deleteSongCtrl = async (req, res) => {
         const song = await produccionesModel.findOne({
             where: { id: songInfo.id },
         });
-        if (song.id_artista === req.session.artista.id) {
+        if (
+            req.session.artista.find((artist) => artist.id === song.id_artista)
+        ) {
             song.destroy();
             res.status(200).send({ message: 'Cancion eliminada con exito' });
         }
@@ -55,22 +57,30 @@ const saveSongData = async (req, res) => {
         const songData = matchedData(req);
 
         try {
-            await produccionesModel.update(songData, {
-                where: { id: songData.id, id_artista: req.session.artista.id },
-            });
-            res.status(200).send({
-                message: `cancion con id ${songData.id} actualizada con exito`,
-            });
+            if (
+                req.session.artista.find(
+                    (artist) => artist.id === songData.id_artista
+                )
+            ) {
+                await produccionesModel.update(songData, {
+                    where: { id: songData.id },
+                });
+                res.status(200).send({
+                    message: `cancion con id ${songData.id} actualizada con exito`,
+                });
+            }
         } catch (error) {
-            console.error(error);
-
-            await produccionesModel.create({
-                ...songData,
-                id_artista: req.session.artista.id,
-                destacado: 0,
-                tipo_obra: req.session.artista.tipo === 1 ? 0 : 1,
-            });
-            res.status(200).send({ message: `cancion creada con exito` });
+            if (
+                req.session.artista.find(
+                    (artist) => artist.id === songData.id_artista
+                )
+            ) {
+                await produccionesModel.create({
+                    ...songData,
+                    destacado: 0,
+                });
+                res.status(200).send({ message: `cancion creada con exito` });
+            }
         }
     } catch (error) {
         console.error(error);

@@ -16,7 +16,7 @@ const validatorHandleproduccion = [
     check('id').optional(),
     check('nombre').exists().notEmpty().isString(),
     check('descripcion').exists().notEmpty().isString(),
-    check('id_artista').optional(),
+    check('id_artista').exists(),
     check('spotify_link').optional(),
     check('youtube_id').exists().notEmpty().isString(),
     check('destacado').optional(),
