@@ -20,7 +20,7 @@ const {
 const { checkRoles } = require('../middleware/roles');
 const rateLimiter = require('../config/rate-limit');
 const { isLoggedInTrue } = require('../middleware/isLoggedIn');
-const { uploadMiddleware, resizeImage } = require('../utils/handleStorage');
+const { uploadMiddleware } = require('../utils/handleStorage');
 const stringToInteger = require('../middleware/stringToInteger');
 const {
     checkSingleArtist,
@@ -64,7 +64,7 @@ router.post(
     checkRoles([3, 4]),
     uploadMiddleware(['jpg', 'aviff', 'webp', 'png']).single('imagen'),
     checkArtistExist,
-    resizeImage,
+    /*  resizeImage, */
     stringToInteger(['tipo']),
     validatorCreateArtist,
     createArtistCtrl
@@ -74,7 +74,7 @@ router.put(
     isLoggedInTrue,
     checkRoles([3, 4]),
     uploadMiddleware(['jpg', 'aviff', 'webp', 'png']).single('imagen'),
-    resizeImage,
+    /*  resizeImage, */
     stringToInteger(['tipo']),
     validatorUpdateArtistText,
     updateArtistImageCtrl

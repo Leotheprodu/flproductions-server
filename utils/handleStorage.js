@@ -1,5 +1,5 @@
 const multer = require('multer');
-const sharp = require('sharp');
+/* const sharp = require('sharp'); */
 const path = require('path');
 const fs = require('fs');
 
@@ -70,10 +70,10 @@ const resizeImage = async (req, res, next) => {
         const { name } = path.parse(filename);
         const newFilename = `${name}.webp`;
 
-        await sharp(req.file.path)
+        /*  await sharp(req.file.path)
             .resize(800)
             .webp({ quality: 80 })
-            .toFile(path.resolve(outputPath, newFilename));
+            .toFile(path.resolve(outputPath, newFilename)); */
         fs.unlinkSync(req.file.path);
         req.file.filename = newFilename;
         next();

@@ -108,7 +108,7 @@ const createArtistCtrl = async (req, res) => {
         const fileData = {
             id: file.filename.split('.').shift(),
             filename: file.filename,
-            url: `${PUBLIC_URL}/${req.session.user.id}/${file.filename}`,
+            url: `${PUBLIC_URL}/${file.filename}`,
             originalname: file.originalname.split('.').shift(),
             ext: file.filename.split('.').pop(),
             user_id: req.session.user.id,
@@ -162,7 +162,7 @@ const updateArtistImageCtrl = async (req, res) => {
         const fileData = {
             id: file.filename.split('.').shift(),
             filename: file.filename,
-            url: `${PUBLIC_URL}/${req.session.user.id}/${file.filename}`,
+            url: `${PUBLIC_URL}/${file.filename}`,
             originalname: file.originalname.split('.').shift(),
             ext: file.filename.split('.').pop(),
             user_id: req.session.user.id,
@@ -172,7 +172,7 @@ const updateArtistImageCtrl = async (req, res) => {
             where: { user_id: userId, tipo },
         });
         if (!artist) {
-            const imagenCargada = `${__dirname}/../storage/${userId}/${file.filename}`;
+            const imagenCargada = `${__dirname}/../storage/${file.filename}`;
             fs.unlinkSync(imagenCargada);
             handleHttpError(res, 'No Existe el Artista');
             return;
@@ -189,7 +189,7 @@ const updateArtistImageCtrl = async (req, res) => {
             resOkData(res, { imagen: fileData.url });
             return;
         }
-        const MEDIA_PATH = `${__dirname}/../storage/${userId}`;
+        const MEDIA_PATH = `${__dirname}/../storage/`;
         const filePath = `${MEDIA_PATH}/${lastImage.filename}`;
         fs.unlinkSync(filePath);
         await lastImage.destroy();
@@ -202,7 +202,7 @@ const updateArtistImageCtrl = async (req, res) => {
     } catch (error) {
         console.error(error);
         const { file } = req;
-        const imagenCargada = `${__dirname}/../storage/${req.session.user.id}/${file.filename}`;
+        const imagenCargada = `${__dirname}/../storage/${file.filename}`;
         fs.unlinkSync(imagenCargada);
         handleHttpError(res, 'Error al actualizar imagen de artista');
     }
