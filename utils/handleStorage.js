@@ -23,7 +23,7 @@ const uploadMiddleware = function (allowedExtensions) {
     const fileSizeLimits = {
         mp3: 10 * 1024 * 1024, // 10 MB
         zip: 100 * 1024 * 1024, // 100 MB
-        jpg: 1 * 1024 * 1024, // 1 MB
+        jpg: 2 * 1024 * 1024, // 1 MB
     };
 
     return multer({

@@ -46,7 +46,7 @@ const registerCtrl = async (req, res) => {
         // Crea el objeto con el nombre y correo del remitente del correo a enviar
         const from = {
             name: 'FLProductions',
-            email: 'no-responder@flproductionscr.com',
+            email: `${process.env.EMAIL_CRED_NORESP_USER}`,
         };
 
         // Crea el objeto con la data que necesita la plantilla para ser renderizada y enviada
@@ -108,6 +108,7 @@ const loginCtrl = async (req, res) => {
                 httpOnly: true,
                 secure: true,
                 maxAge: 3600000 * 24,
+                sameSite: 'none',
             });
         } else {
             res.cookie('sessionId', req.session.id, {
@@ -165,7 +166,7 @@ const sendPin = async (req, res) => {
         await createTempToken(token, email, 'password');
         const from = {
             name: 'FLProductions',
-            email: 'no-responder@flproductionscr.com',
+            email: `${process.env.EMAIL_CRED_NORESP_USER}`,
         };
         const dataToEJS = { token };
         await sendAEmail(
@@ -221,7 +222,7 @@ const updateUsersCtrl = async (req, res) => {
             const link = `${process.env.LINK_HOST}/verificar-email/${token}`;
             const from = {
                 name: 'FLProductions',
-                email: 'no-responder@flproductionscr.com',
+                email: `${process.env.EMAIL_CRED_NORESP_USER}`,
             };
             const dataToEJS = { username: req.session.user.username, link };
 
@@ -286,7 +287,7 @@ const verifyEmailCtrl = async (req, res) => {
         const link = `${process.env.LINK_HOST}/verificar-email/${token}`;
         const from = {
             name: 'FLProductions',
-            email: 'no-responder@flproductionscr.com',
+            email: `${process.env.EMAIL_CRED_NORESP_USER}`,
         };
         const dataToEJS = { username: req.session.user.username, link };
         await sendAEmail(

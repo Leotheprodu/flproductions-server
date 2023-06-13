@@ -102,28 +102,41 @@ const deleteItem = async (req, res) => {
 };
 const createArtistCtrl = async (req, res) => {
     try {
-        const { file } = req;
         const { nombre_artista, instagram, spotify, info, tipo } =
             matchedData(req);
-        const fileData = {
-            id: file.filename.split('.').shift(),
-            filename: file.filename,
-            url: `${PUBLIC_URL}/${file.filename}`,
-            originalname: file.originalname.split('.').shift(),
-            ext: file.filename.split('.').pop(),
-            user_id: req.session.user.id,
-        };
-        const artistData = {
-            nombre_artista,
-            instagram,
-            spotify,
-            info,
-            tipo,
-            imagen: fileData.url,
-            user_id: fileData.user_id,
-        };
-        await artistasModel.create(artistData);
-        await storageModel.create(fileData);
+        try {
+            const { file } = req;
+            const fileData = {
+                id: file.filename.split('.').shift(),
+                filename: file.filename,
+                url: `${PUBLIC_URL}/${file.filename}`,
+                originalname: file.originalname.split('.').shift(),
+                ext: file.filename.split('.').pop(),
+                user_id: req.session.user.id,
+            };
+            const artistData = {
+                nombre_artista,
+                instagram,
+                spotify,
+                info,
+                tipo,
+                imagen: fileData.url,
+                user_id: fileData.user_id,
+            };
+            await storageModel.create(fileData);
+            await artistasModel.create(artistData);
+        } catch (error) {
+            const artistData = {
+                nombre_artista,
+                instagram,
+                spotify,
+                info,
+                tipo,
+                imagen: null,
+                user_id: req.session.user.id,
+            };
+            await artistasModel.create(artistData);
+        }
         await RefreshSessionData(req);
         resOkData(res, req.session.artista);
     } catch (error) {

@@ -13,8 +13,9 @@ const sess = {
     saveUninitialized: false,
     cookie: {
         maxAge: 86400000,
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-    }, // Configuramos una cookie segura y establecemos una expiración de 1 hora
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : false,
+    },
 };
 
 module.exports = sess;
