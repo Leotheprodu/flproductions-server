@@ -26,7 +26,7 @@ const validatorHandleproduccion = [
     check('bpm').optional(),
     check('key').optional(),
     check('fecha_lanzamiento').exists().notEmpty().isDate(),
-
+    check('status').exists().notEmpty(),
     (req, res, next) => validateResults(req, res, next),
 ];
 

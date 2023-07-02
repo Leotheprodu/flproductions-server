@@ -41,11 +41,21 @@ const deleteSongCtrl = async (req, res) => {
         const song = await produccionesModel.findOne({
             where: { id: songInfo.id },
         });
+        console.log(songInfo.tipo_obra);
         if (
             req.session.artista.find((artist) => artist.id === song.id_artista)
         ) {
-            song.destroy();
-            res.status(200).send({ message: 'Cancion eliminada con exito' });
+            if (song.tipo_obra === 1) {
+                await song.update({ status: 0 });
+                res.status(200).send({
+                    message: 'Intrumental desactivado con exito',
+                });
+            } else {
+                await song.destroy();
+                res.status(200).send({
+                    message: 'Cancion eliminada con exito',
+                });
+            }
         }
     } catch (error) {
         console.error(error);

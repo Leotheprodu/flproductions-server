@@ -55,6 +55,10 @@ const Producciones = sequelize.define(
             type: DataTypes.DATE,
             allowNull: false,
         },
+        status: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
     },
     {
         timestamps: false,

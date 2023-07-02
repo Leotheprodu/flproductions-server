@@ -66,11 +66,11 @@ app.use(function (err, req, res, next) {
 
     next(err);
 });
-app.use((err, req, res) => {
+/* app.use((err, req, res) => {
     console.error(err);
     res.status(500).send({ message: 'Ocurrió un error en el servidor' });
 });
-
+ */
 const server = app.listen(PUERTO, () => {
     console.log(`El servidor esta escuchando en el puerto ${PUERTO}...`);
 });
