@@ -3,8 +3,9 @@
     FLPChatRecordingStudio,
 } = require('../config/openAi'); */
 const { handleHttpError } = require('../utils/handleError');
-const { PAYPAL_API, AUTH } = require('../config/paypal');
+const { PAYPAL_API } = require('../config/paypal');
 const axios = require('axios');
+const { get_access_token, capturePayment } = require('../utils/handlePaypal');
 /**
  * Obtener un detalle!
  * @param {*} req
@@ -13,8 +14,7 @@ const axios = require('axios');
 */
 const createOrder = async (req, res) => {
     try {
-        const params = new URLSearchParams();
-        params.append('grant_type', 'client_credentials');
+        const access_token = await get_access_token();
         const order = {
             intent: 'CAPTURE',
             purchase_units: [
@@ -29,13 +29,10 @@ const createOrder = async (req, res) => {
                 brand_name: 'FLProductions',
                 landing_page: 'NO_PREFERENCE',
                 user_action: 'PAY_NOW',
-                return_url: `${process.env.PUBLIC_URL}/api/payments/capture-order`,
-                cancel_url: `${process.env.PUBLIC_URL}/api/payments/cancel-order`,
+                return_url: `${process.env.PUBLIC_URL}/api/payment/capture-order`,
+                cancel_url: `${process.env.PUBLIC_URL}/api/payment/cancel-order`,
             },
         };
-        const {
-            data: { access_token },
-        } = await axios.post(`${PAYPAL_API}/v1/oauth2/token`, params, AUTH);
         const response = await axios.post(
             `${PAYPAL_API}/v2/checkout/orders`,
             order,
@@ -45,8 +42,7 @@ const createOrder = async (req, res) => {
                 },
             }
         );
-        console.log(response.data);
-        res.send({ response: response.data, access_token: access_token });
+        res.send({ response: response.data });
     } catch (error) {
         console.log(error);
         handleHttpError(res, 'Hubo un problema al crear orden de compra');
@@ -54,7 +50,10 @@ const createOrder = async (req, res) => {
 };
 const captureOrder = async (req, res) => {
     try {
-        res.send({ message: 'captureOrder' });
+        const { token } = req.query;
+        console.log(token);
+        const response = await capturePayment(token);
+        res.send({ respuesta: response.data });
     } catch (error) {
         console.log(error);
         handleHttpError(res, 'Hubo un problema al capturar orden de compra');

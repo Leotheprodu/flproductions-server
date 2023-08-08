@@ -1,5 +1,6 @@
 const { sequelize } = require('../../config/mysql');
 const { DataTypes } = require('sequelize');
+const { Op } = require('sequelize');
 const Artistas = require('./artistas');
 
 const Producciones = sequelize.define(
@@ -68,11 +69,24 @@ const Producciones = sequelize.define(
 /**
  * Implementando Modelo Personalizado
  */
-Producciones.findAllData = function () {
+Producciones.findAllData = async function (page, pageSize, types) {
     Producciones.belongsTo(Artistas, {
         foreignKey: 'id_artista',
     });
-    return Producciones.findAll({ include: Artistas, order: [['id', 'DESC']] });
+    const typeList = !types
+        ? null
+        : types.includes(',')
+        ? types.split(',').map((type) => parseInt(type))
+        : [parseInt(types)];
+    const whereClause = types ? { tipo_obra: { [Op.in]: typeList } } : {};
+    const offset = (page - 1) * pageSize;
+    return Producciones.findAll({
+        include: Artistas,
+        order: [['fecha_lanzamiento', 'DESC']],
+        offset,
+        limit: pageSize,
+        where: whereClause,
+    });
 };
 
 module.exports = Producciones;

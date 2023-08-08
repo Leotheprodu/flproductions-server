@@ -1,6 +1,7 @@
 const { produccionesModel } = require('../models');
 const { matchedData } = require('express-validator');
 const { handleHttpError } = require('../utils/handleError');
+const { Op } = require('sequelize');
 
 /**
  * Obtener la base de datos!
@@ -10,8 +11,36 @@ const { handleHttpError } = require('../utils/handleError');
 */
 const getItems = async (req, res) => {
     try {
-        const producciones = await produccionesModel.findAllData();
-        res.status(200).send({ producciones });
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = parseInt(req.query.pageSize) || 100;
+        const types = req.query.types || null;
+        const producciones = await produccionesModel.findAllData(
+            page,
+            pageSize,
+            types
+        );
+        let totalCount = 0;
+        if (types) {
+            const typeList = types.split(',').map((type) => parseInt(type));
+            totalCount = await produccionesModel.count({
+                where: {
+                    tipo_obra: {
+                        [Op.in]: typeList,
+                    },
+                },
+            });
+        } else {
+            totalCount = await produccionesModel.count();
+        }
+        const totalPages = Math.ceil(totalCount / pageSize); // Calcular el número total de páginas
+        res.status(200).send({
+            producciones,
+            pagination: {
+                totalItems: totalCount,
+                totalPages,
+                currentPage: page,
+            },
+        });
     } catch (error) {
         console.error(error);
         handleHttpError(res, 'Error al cargar las producciones');

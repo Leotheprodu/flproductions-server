@@ -8,4 +8,11 @@ const paypalFeePercent = 0.054; //%
 const paypalFeeDolar = 0.3; //USD
 const AUTH = { auth: { username: CLIENT, password: SECRET } };
 
-module.exports = { PAYPAL_API, AUTH, paypalFeePercent, paypalFeeDolar };
+module.exports = {
+    PAYPAL_API,
+    AUTH,
+    paypalFeePercent,
+    paypalFeeDolar,
+    CLIENT,
+    SECRET,
+};
