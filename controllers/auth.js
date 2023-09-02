@@ -65,8 +65,11 @@ const registerCtrl = async (req, res) => {
         );
 
         // Con esta linea cuando se registra no devuelve en password en la respuesta
-        data.set('password', undefined, { strict: false });
 
+        data.set('password', undefined, { strict: false });
+        if (req.role && data) {
+            await role_usersModel.create({ user_id: data.id, role_id: 3 });
+        }
         //Respuesta
         res.status(200).send({ data, guardarToken, enviarCorreo });
     } catch (error) {

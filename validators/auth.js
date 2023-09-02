@@ -7,6 +7,7 @@ const validatorSignUp = [
     check('email').exists().notEmpty().isEmail(),
 
     check('password').exists().notEmpty().isString(),
+    check('role').optional(),
 
     (req, res, next) => validateResults(req, res, next),
 ];

@@ -21,9 +21,9 @@ const storage = multer.diskStorage({
  */
 const uploadMiddleware = function (allowedExtensions) {
     const fileSizeLimits = {
-        mp3: 10 * 1024 * 1024, // 10 MB
-        zip: 100 * 1024 * 1024, // 100 MB
-        jpg: 2 * 1024 * 1024, // 1 MB
+        mp3: 20 * 1024 * 1024,
+        zip: 300 * 1024 * 1024,
+        jpg: 2 * 1024 * 1024,
     };
 
     return multer({
