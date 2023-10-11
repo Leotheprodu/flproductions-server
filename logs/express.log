@@ -627,3 +627,39 @@ Response Body:
 			"user_id
 ...
 Response: 200 27.558 ms 
+
+Request: GET /api/artistas at Wed Oct 11 2023 16:48:09 GMT-0600, IP: ::1, User Agent: PostmanRuntime/7.33.0
+Response Body:
+{
+	"artistas": [
+		{
+			"id": 211,
+			"nombre_artista": "Lsound",
+			"instagram": "https://www.instagram.com/leotheprodu/",
+			"spotify": "",
+			"imagen": "https://api.leotheprodu.com/1686631978450.png",
+			"info": "Que tal mi gente!, aca voy a compartir mi musica, no instrumentales, solo musica!, personal",
+			"tipo": 1,
+			"user_id": 44
+		},
+		{
+			"id": 212,
+			"nombre_artista": "Edriel ",
+			"instagram": "https://www.instagram.com/edrijimz",
+			"spotify": "https://open.spotify.com/artist/6oYrMelryGEm2toWFHYdkJ?si=rd5YRJGqRdGIbV_yeHevsQ",
+			"imagen": "https://api.leotheprodu.com/1686631990966.jpg",
+			"info": "Artista tico género urbano",
+			"tipo": 1,
+			"user_id": 107
+		},
+		{
+			"id": 213,
+			"nombre_artista": "LeotheProdu",
+			"instagram": "https://www.instagram.com/leotheprodu/",
+			"spotify": "",
+			"imagen": "https://api.leotheprodu.com/1686639572895.png",
+			"info": "Productor Musical Costarricense, desde 2009. Productor Musical en FLProductions.",
+			"tipo": 0,
+			"user_id
+...
+Response: 200 14.861 ms 
