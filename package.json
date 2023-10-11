@@ -33,7 +33,7 @@
     "author": "LeotheProdu",
     "license": "ISC",
     "engines": {
-        "node": "18.14.0"
+        "node": "18.17.1"
     },
     "devDependencies": {
         "eslint": "^8.39.0",
