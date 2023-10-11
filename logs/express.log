@@ -1,0 +1,593 @@
+
+Request: OPTIONS /api/auth/check-session at Wed Oct 11 2023 03:12:13 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 1.067 ms 
+
+Request: OPTIONS /api/system-messages at Wed Oct 11 2023 03:12:14 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 1.573 ms 
+
+Request: OPTIONS /api/usuarios/avatar/44 at Wed Oct 11 2023 03:12:14 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.228 ms 
+
+Request: GET /api/auth/check-session at Wed Oct 11 2023 03:12:14 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"message": "El usuario no ha iniciado sesion"
+}
+Response: 200 14.300 ms 
+
+Request: GET /api/system-messages at Wed Oct 11 2023 03:12:14 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+[
+	{
+		"id": 1,
+		"tipo_de_mensaje": "mainTop",
+		"id_role": 8,
+		"mensaje": "Consigue un 33% de descuento, solo agrega tu musica"
+	},
+	{
+		"id": 2,
+		"tipo_de_mensaje": "mensajePanel",
+		"id_role": 8,
+		"mensaje": "Hemos actualizado ésta aplicacion, ya puedes crear un artista o productor y puedes cargar tu musica, lo unico que necesitas es tenerla subida en Youtube, y crear tu artista aqui mismo en el panel de control, con tu link de youtube puedes cargar todas tus canciones, mas adelante, agregaremos funcionalidades donde las personas pueden compartir tus canciones, dejar comentarios, un \"tuanis\" (van a ser como los likes de facebook), contactar con tus fans, y ya veremos que mas puedes necesitar, para hacer que tu carrera musical sea mas sencilla."
+	}
+]
+Response: 200 45.522 ms 
+
+Request: GET /api/usuarios/avatar/44 at Wed Oct 11 2023 03:12:14 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"id": 1,
+	"user_id": 44,
+	"avatar": 2,
+	"usuario.username": "LeoTheProdu"
+}
+Response: 200 45.319 ms 
+
+Request: GET /api/producciones at Wed Oct 11 2023 03:12:24 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"producciones": [
+		{
+			"id": 60,
+			"nombre": "Don't Stop ",
+			"descripcion": "Reggae Roots ",
+			"id_artista": 221,
+			"spotify_link": "https://open.spotify.com/album/5YVylo5cDdou5IF5sduu8d?si=qW7l3Q4rTX2QPI4CjUQtqQ",
+			"youtube_id": "6Og0qnTUSIU",
+			"destacado": 0,
+			"tipo_obra": 1,
+			"estilo": "cristiano",
+			"genero": "Afrobeat",
+			"bpm": null,
+			"key": "indefinido",
+			"fecha_lanzamiento": "2023-08-16",
+			"status": 1,
+			"artista": {
+				"id": 221,
+				"nombre_artista": "V-Shon",
+				"instagram": "https://www.instagram.com/vshon506/",
+				"spotify": "https://open.spotify.com/artist/2VLqSZ3FwBZKS2Bdhc50ht?si=G5mFiqpXTZmht4BsDgzcIQ",
+				"imagen": "https://api.leotheprodu.com/1694885085589.jpg",
+				"info": "Cantautor Costarricense urbano,motivador de vida y animador !",
+				"tipo": 1,
+				"user_id": 110
+			}
+		},
+		{
+			"id": 51,
+			"nombre": "Busqueda Infinita",
+			"descripcion": "Rock",
+			"id_artista": 217,
+			"spotify_link": null,
+			"youtube_id": "72EV9GRB3Eo",
+		
+...
+Response: 200 42.977 ms 
+
+Request: OPTIONS /api/auth/login at Wed Oct 11 2023 03:37:33 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.092 ms 
+
+Request: POST /api/auth/login at Wed Oct 11 2023 03:37:33 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"error": [
+		{
+			"type": "field",
+			"value": "",
+			"msg": "Invalid value",
+			"path": "email",
+			"location": "body"
+		},
+		{
+			"type": "field",
+			"value": "",
+			"msg": "Invalid value",
+			"path": "email",
+			"location": "body"
+		},
+		{
+			"type": "field",
+			"value": "",
+			"msg": "Invalid value",
+			"path": "password",
+			"location": "body"
+		}
+	],
+	"message": "Revisa que los campos del formulario cumplan los requisitos"
+}
+Response: 403 158.422 ms 
+
+Request: OPTIONS /api/auth/login at Wed Oct 11 2023 03:37:53 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.247 ms 
+
+Request: POST /api/auth/login at Wed Oct 11 2023 03:37:53 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"isLoggedIn": true,
+	"user": {
+		"id": 44,
+		"username": "LeoTheProdu",
+		"email": "leovpc@gmail.com",
+		"fecha_creacion": "2023-03-28",
+		"ultima_actualizacion": "2023-04-28T10:44:41.000Z",
+		"activo": 1
+	},
+	"roles": [
+		1,
+		2,
+		3,
+		4
+	],
+	"artista": [
+		{
+			"id": 211,
+			"nombre_artista": "Lsound",
+			"instagram": "https://www.instagram.com/leotheprodu/",
+			"spotify": "",
+			"imagen": "https://api.leotheprodu.com/1686631978450.png",
+			"info": "Que tal mi gente!, aca voy a compartir mi musica, no instrumentales, solo musica!, personal",
+			"tipo": 1,
+			"user_id": 44
+		},
+		{
+			"id": 213,
+			"nombre_artista": "LeotheProdu",
+			"instagram": "https://www.instagram.com/leotheprodu/",
+			"spotify": "",
+			"imagen": "https://api.leotheprodu.com/1686639572895.png",
+			"info": "Productor Musical Costarricense, desde 2009. Productor Musical en FLProductions.",
+			"tipo": 0,
+			"user_id": 44
+		}
+	],
+	"userMessage": {
+		"message": "Inicio de Sesion existoso"
+	}
+}
+Response: 200 98.053 ms 
+
+Request: OPTIONS /api/usuarios/avatar/44 at Wed Oct 11 2023 03:37:53 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.114 ms 
+
+Request: OPTIONS /api/system-messages at Wed Oct 11 2023 03:37:53 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.142 ms 
+
+Request: OPTIONS /api/chat-tools/responses at Wed Oct 11 2023 03:37:53 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.172 ms 
+
+Request: GET /api/usuarios/avatar/44 at Wed Oct 11 2023 03:37:53 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"id": 1,
+	"user_id": 44,
+	"avatar": 2,
+	"usuario.username": "LeoTheProdu"
+}
+Response: 304 17.919 ms 
+
+Request: GET /api/system-messages at Wed Oct 11 2023 03:37:53 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+[
+	{
+		"id": 1,
+		"tipo_de_mensaje": "mainTop",
+		"id_role": 8,
+		"mensaje": "Consigue un 33% de descuento, solo agrega tu musica"
+	},
+	{
+		"id": 2,
+		"tipo_de_mensaje": "mensajePanel",
+		"id_role": 8,
+		"mensaje": "Hemos actualizado ésta aplicacion, ya puedes crear un artista o productor y puedes cargar tu musica, lo unico que necesitas es tenerla subida en Youtube, y crear tu artista aqui mismo en el panel de control, con tu link de youtube puedes cargar todas tus canciones, mas adelante, agregaremos funcionalidades donde las personas pueden compartir tus canciones, dejar comentarios, un \"tuanis\" (van a ser como los likes de facebook), contactar con tus fans, y ya veremos que mas puedes necesitar, para hacer que tu carrera musical sea mas sencilla."
+	}
+]
+Response: 304 27.997 ms 
+
+Request: GET /api/chat-tools/responses at Wed Oct 11 2023 03:37:53 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+[
+	{
+		"id": 54,
+		"user_id": 44,
+		"other_user_id": 44,
+		"pregunta": "cual es el precio de una canción?",
+		"respuesta": "\n- Grabación de voz: 30 mil colones (incluye edición vocal, mezcla y masterización).\n- Creación de instrumental: 70 mil colones.\n- Producción completa (grabación vocal + instrumental): 100 mil colones.",
+		"createdAt": "2023-06-13T19:02:14.000Z",
+		"updatedAt": "2023-06-13T19:02:14.000Z"
+	},
+	{
+		"id": 56,
+		"user_id": 44,
+		"other_user_id": 44,
+		"pregunta": "se puede grab ar bandas completas?",
+		"respuesta": "\nSi, se pueden grabar bandas completas, el unico detalle es que no grabamos instrumentos como la bateria, por no contar con las instalaciones, en su lugar usamos un vst con kontakt, de manera digital.",
+		"createdAt": "2023-06-18T08:26:55.000Z",
+		"updatedAt": "2023-06-18T08:26:55.000Z"
+	}
+]
+Response: 200 28.728 ms 
+
+Request: OPTIONS /api/usuarios/avatar/44 at Wed Oct 11 2023 03:37:59 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.139 ms 
+
+Request: GET /api/usuarios/avatar/44 at Wed Oct 11 2023 03:37:59 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"id": 1,
+	"user_id": 44,
+	"avatar": 2,
+	"usuario.username": "LeoTheProdu"
+}
+Response: 304 7.137 ms 
+
+Request: OPTIONS /api/producciones/artist/211 at Wed Oct 11 2023 03:38:19 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 1.748 ms 
+
+Request: GET /api/producciones/artist/211 at Wed Oct 11 2023 03:38:19 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+[
+	{
+		"id": 43,
+		"nombre": "Belong Together",
+		"descripcion": "A esta cancion le hice un remix hace un tiempo para un concurso, la cancion es de Fatima Pinto.",
+		"id_artista": 211,
+		"spotify_link": null,
+		"youtube_id": "kUDCr5UTBoU",
+		"destacado": 0,
+		"tipo_obra": 1,
+		"estilo": "secular",
+		"genero": "Pop",
+		"bpm": null,
+		"key": "indefinido",
+		"fecha_lanzamiento": "2017-08-24",
+		"status": 1
+	}
+]
+Response: 200 11.665 ms 
+
+Request: GET /api/producciones at Wed Oct 11 2023 03:38:34 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"producciones": [
+		{
+			"id": 60,
+			"nombre": "Don't Stop ",
+			"descripcion": "Reggae Roots ",
+			"id_artista": 221,
+			"spotify_link": "https://open.spotify.com/album/5YVylo5cDdou5IF5sduu8d?si=qW7l3Q4rTX2QPI4CjUQtqQ",
+			"youtube_id": "6Og0qnTUSIU",
+			"destacado": 0,
+			"tipo_obra": 1,
+			"estilo": "cristiano",
+			"genero": "Afrobeat",
+			"bpm": null,
+			"key": "indefinido",
+			"fecha_lanzamiento": "2023-08-16",
+			"status": 1,
+			"artista": {
+				"id": 221,
+				"nombre_artista": "V-Shon",
+				"instagram": "https://www.instagram.com/vshon506/",
+				"spotify": "https://open.spotify.com/artist/2VLqSZ3FwBZKS2Bdhc50ht?si=G5mFiqpXTZmht4BsDgzcIQ",
+				"imagen": "https://api.leotheprodu.com/1694885085589.jpg",
+				"info": "Cantautor Costarricense urbano,motivador de vida y animador !",
+				"tipo": 1,
+				"user_id": 110
+			}
+		},
+		{
+			"id": 51,
+			"nombre": "Busqueda Infinita",
+			"descripcion": "Rock",
+			"id_artista": 217,
+			"spotify_link": null,
+			"youtube_id": "72EV9GRB3Eo",
+		
+...
+Response: 304 23.803 ms 
+
+Request: OPTIONS /api/usuarios/avatar/44 at Wed Oct 11 2023 03:38:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.143 ms 
+
+Request: OPTIONS /api/usuarios/avatar/44 at Wed Oct 11 2023 03:38:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.156 ms 
+
+Request: OPTIONS /api/usuarios/avatar/44 at Wed Oct 11 2023 03:38:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.162 ms 
+
+Request: OPTIONS /api/usuarios/avatar/44 at Wed Oct 11 2023 03:38:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.148 ms 
+
+Request: GET /api/usuarios/avatar/44 at Wed Oct 11 2023 03:38:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"id": 1,
+	"user_id": 44,
+	"avatar": 2,
+	"usuario.username": "LeoTheProdu"
+}
+Response: 304 5.903 ms 
+
+Request: GET /api/usuarios/avatar/44 at Wed Oct 11 2023 03:38:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"id": 1,
+	"user_id": 44,
+	"avatar": 2,
+	"usuario.username": "LeoTheProdu"
+}
+Response: 304 8.700 ms 
+
+Request: GET /api/usuarios/avatar/44 at Wed Oct 11 2023 03:38:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"id": 1,
+	"user_id": 44,
+	"avatar": 2,
+	"usuario.username": "LeoTheProdu"
+}
+Response: 304 4.644 ms 
+
+Request: GET /api/usuarios/avatar/44 at Wed Oct 11 2023 03:38:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"id": 1,
+	"user_id": 44,
+	"avatar": 2,
+	"usuario.username": "LeoTheProdu"
+}
+Response: 304 9.522 ms 
+
+Request: OPTIONS /api/auth/logout at Wed Oct 11 2023 03:39:03 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.052 ms 
+
+Request: GET /api/auth/logout at Wed Oct 11 2023 03:39:03 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"isLoggedIn": false,
+	"user": {
+		"id": 44,
+		"username": "LeoTheProdu",
+		"email": "leovpc@gmail.com",
+		"fecha_creacion": "2023-03-28",
+		"ultima_actualizacion": "2023-04-28T10:44:41.000Z",
+		"activo": 1
+	},
+	"roles": [
+		1,
+		2,
+		3,
+		4
+	],
+	"artista": [
+		{
+			"id": 211,
+			"nombre_artista": "Lsound",
+			"instagram": "https://www.instagram.com/leotheprodu/",
+			"spotify": "",
+			"imagen": "https://api.leotheprodu.com/1686631978450.png",
+			"info": "Que tal mi gente!, aca voy a compartir mi musica, no instrumentales, solo musica!, personal",
+			"tipo": 1,
+			"user_id": 44
+		},
+		{
+			"id": 213,
+			"nombre_artista": "LeotheProdu",
+			"instagram": "https://www.instagram.com/leotheprodu/",
+			"spotify": "",
+			"imagen": "https://api.leotheprodu.com/1686639572895.png",
+			"info": "Productor Musical Costarricense, desde 2009. Productor Musical en FLProductions.",
+			"tipo": 0,
+			"user_id": 44
+		}
+	],
+	"userMessage": {
+		"message": "Cierre de Sesion existoso"
+	}
+}
+Response: 200 2.478 ms 
+
+Request: OPTIONS /api/system-messages at Wed Oct 11 2023 03:39:03 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.051 ms 
+
+Request: GET /api/system-messages at Wed Oct 11 2023 03:39:03 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+[
+	{
+		"id": 1,
+		"tipo_de_mensaje": "mainTop",
+		"id_role": 8,
+		"mensaje": "Consigue un 33% de descuento, solo agrega tu musica"
+	},
+	{
+		"id": 2,
+		"tipo_de_mensaje": "mensajePanel",
+		"id_role": 8,
+		"mensaje": "Hemos actualizado ésta aplicacion, ya puedes crear un artista o productor y puedes cargar tu musica, lo unico que necesitas es tenerla subida en Youtube, y crear tu artista aqui mismo en el panel de control, con tu link de youtube puedes cargar todas tus canciones, mas adelante, agregaremos funcionalidades donde las personas pueden compartir tus canciones, dejar comentarios, un \"tuanis\" (van a ser como los likes de facebook), contactar con tus fans, y ya veremos que mas puedes necesitar, para hacer que tu carrera musical sea mas sencilla."
+	}
+]
+Response: 304 6.465 ms 
+
+Request: OPTIONS /api/auth/signup at Wed Oct 11 2023 03:41:56 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.067 ms 
+
+Request: POST /api/auth/signup at Wed Oct 11 2023 03:41:56 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"data": {
+		"id": 123,
+		"username": "pruebas",
+		"email": "giwizysq@cowork.email",
+		"fecha_creacion": "2023-10-11T00:00:00.000Z"
+	},
+	"guardarToken": {
+		"message": "token temporal guardado existosamente",
+		"temp_token": {
+			"id": 146,
+			"token": "35f41c137ecdc969e0cd1b278408fc1c254237fada4cbb773d49c14552b703b2",
+			"user_email": "giwizysq@cowork.email",
+			"type": "role"
+		}
+	}
+}
+Response: 200 118.490 ms 
+
+Request: OPTIONS /api/auth/login at Wed Oct 11 2023 03:41:56 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.050 ms 
+
+Request: POST /api/auth/login at Wed Oct 11 2023 03:41:57 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"isLoggedIn": true,
+	"user": {
+		"id": 123,
+		"username": "pruebas",
+		"email": "giwizysq@cowork.email",
+		"fecha_creacion": "2023-10-11",
+		"ultima_actualizacion": "2023-10-11T09:41:56.000Z",
+		"activo": 1
+	},
+	"roles": [
+		3,
+		2
+	],
+	"artista": [],
+	"userMessage": {
+		"message": "Inicio de Sesion existoso"
+	}
+}
+Response: 200 92.874 ms 
+
+Request: OPTIONS /api/usuarios/avatar/123 at Wed Oct 11 2023 03:41:57 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.121 ms 
+
+Request: OPTIONS /api/system-messages at Wed Oct 11 2023 03:41:57 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.247 ms 
+
+Request: OPTIONS /api/chat-tools/responses at Wed Oct 11 2023 03:41:57 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.059 ms 
+
+Request: GET /api/usuarios/avatar/123 at Wed Oct 11 2023 03:41:57 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+null
+Response: 200 12.278 ms 
+
+Request: GET /api/chat-tools/responses at Wed Oct 11 2023 03:41:57 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"message": "USER_NOT_EMAIL_VERIFIED"
+}
+Response: 403 14.413 ms 
+
+Request: GET /api/system-messages at Wed Oct 11 2023 03:41:57 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+[
+	{
+		"id": 1,
+		"tipo_de_mensaje": "mainTop",
+		"id_role": 8,
+		"mensaje": "Consigue un 33% de descuento, solo agrega tu musica"
+	},
+	{
+		"id": 2,
+		"tipo_de_mensaje": "mensajePanel",
+		"id_role": 8,
+		"mensaje": "Hemos actualizado ésta aplicacion, ya puedes crear un artista o productor y puedes cargar tu musica, lo unico que necesitas es tenerla subida en Youtube, y crear tu artista aqui mismo en el panel de control, con tu link de youtube puedes cargar todas tus canciones, mas adelante, agregaremos funcionalidades donde las personas pueden compartir tus canciones, dejar comentarios, un \"tuanis\" (van a ser como los likes de facebook), contactar con tus fans, y ya veremos que mas puedes necesitar, para hacer que tu carrera musical sea mas sencilla."
+	}
+]
+Response: 304 17.444 ms 
+
+Request: OPTIONS /api/usuarios/avatar/123 at Wed Oct 11 2023 03:46:44 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 2.223 ms 
+
+Request: GET /api/usuarios/avatar/123 at Wed Oct 11 2023 03:46:44 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+null
+Response: 304 51.728 ms 
+
+Request: OPTIONS /api/auth/logout at Wed Oct 11 2023 03:47:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.171 ms 
+
+Request: GET /api/auth/logout at Wed Oct 11 2023 03:47:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"isLoggedIn": false,
+	"user": {
+		"id": 123,
+		"username": "pruebas",
+		"email": "giwizysq@cowork.email",
+		"fecha_creacion": "2023-10-11",
+		"ultima_actualizacion": "2023-10-11T09:41:56.000Z",
+		"activo": 1
+	},
+	"roles": [
+		3,
+		2
+	],
+	"artista": [],
+	"userMessage": {
+		"message": "Cierre de Sesion existoso"
+	}
+}
+Response: 200 6.116 ms 
+
+Request: OPTIONS /api/system-messages at Wed Oct 11 2023 03:47:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.088 ms 
+
+Request: GET /api/system-messages at Wed Oct 11 2023 03:47:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+[
+	{
+		"id": 1,
+		"tipo_de_mensaje": "mainTop",
+		"id_role": 8,
+		"mensaje": "Consigue un 33% de descuento, solo agrega tu musica"
+	},
+	{
+		"id": 2,
+		"tipo_de_mensaje": "mensajePanel",
+		"id_role": 8,
+		"mensaje": "Hemos actualizado ésta aplicacion, ya puedes crear un artista o productor y puedes cargar tu musica, lo unico que necesitas es tenerla subida en Youtube, y crear tu artista aqui mismo en el panel de control, con tu link de youtube puedes cargar todas tus canciones, mas adelante, agregaremos funcionalidades donde las personas pueden compartir tus canciones, dejar comentarios, un \"tuanis\" (van a ser como los likes de facebook), contactar con tus fans, y ya veremos que mas puedes necesitar, para hacer que tu carrera musical sea mas sencilla."
+	}
+]
+Response: 304 14.905 ms 
+
+Request: OPTIONS /api/auth/send-pin at Wed Oct 11 2023 03:47:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.234 ms 
+
+Request: POST /api/auth/send-pin at Wed Oct 11 2023 03:47:37 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"message": "PIN_SENT"
+}
+Response: 200 41.819 ms 
+
+Request: OPTIONS /api/auth/send-pin at Wed Oct 11 2023 03:54:04 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 2.028 ms 
+
+Request: POST /api/auth/send-pin at Wed Oct 11 2023 03:54:04 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"message": "PIN_SENT"
+}
+Response: 200 59.675 ms 
