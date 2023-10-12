@@ -9,7 +9,7 @@ const { dbConnectMySql } = require('./config/mysql');
 const session = require('express-session');
 const sess = require('./config/expressSessions');
 const app = express();
-
+const alloweOrigins = process.env.LINK_CORS.split(',');
 morganBody(app, {
     noColors: true,
     stream: log,
@@ -26,7 +26,7 @@ morganBody(app, {
 
 app.use(
     cors({
-        origin: process.env.LINK_CORS,
+        origin: alloweOrigins,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
         allowedHeaders: [
             'Content-Type',

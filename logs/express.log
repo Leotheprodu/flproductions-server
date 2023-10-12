@@ -663,3 +663,94 @@ Response Body:
 			"user_id
 ...
 Response: 200 14.861 ms 
+
+Request: OPTIONS /api/auth/check-session at Wed Oct 11 2023 18:53:29 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 2.317 ms 
+
+Request: OPTIONS /api/system-messages at Wed Oct 11 2023 18:53:29 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.635 ms 
+
+Request: OPTIONS /api/usuarios/avatar/44 at Wed Oct 11 2023 18:53:29 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.176 ms 
+
+Request: GET /api/auth/check-session at Wed Oct 11 2023 18:53:29 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"message": "El usuario no ha iniciado sesion"
+}
+Response: 200 12.196 ms 
+
+Request: GET /api/system-messages at Wed Oct 11 2023 18:53:29 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+[
+	{
+		"id": 1,
+		"tipo_de_mensaje": "mainTop",
+		"id_role": 8,
+		"mensaje": "Consigue un 33% de descuento, solo agrega tu musica"
+	},
+	{
+		"id": 2,
+		"tipo_de_mensaje": "mensajePanel",
+		"id_role": 8,
+		"mensaje": "Hemos actualizado ésta aplicacion, ya puedes crear un artista o productor y puedes cargar tu musica, lo unico que necesitas es tenerla subida en Youtube, y crear tu artista aqui mismo en el panel de control, con tu link de youtube puedes cargar todas tus canciones, mas adelante, agregaremos funcionalidades donde las personas pueden compartir tus canciones, dejar comentarios, un \"tuanis\" (van a ser como los likes de facebook), contactar con tus fans, y ya veremos que mas puedes necesitar, para hacer que tu carrera musical sea mas sencilla."
+	}
+]
+Response: 200 51.148 ms 
+
+Request: GET /api/usuarios/avatar/44 at Wed Oct 11 2023 18:53:29 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"id": 1,
+	"user_id": 44,
+	"avatar": 2,
+	"usuario.username": "LeoTheProdu"
+}
+Response: 200 76.569 ms 
+
+Request: GET /api/producciones at Wed Oct 11 2023 18:53:50 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"producciones": [
+		{
+			"id": 51,
+			"nombre": "Busqueda Infinita",
+			"descripcion": "Rock",
+			"id_artista": 217,
+			"spotify_link": null,
+			"youtube_id": "72EV9GRB3Eo",
+			"destacado": 1,
+			"tipo_obra": 1,
+			"estilo": "secular",
+			"genero": "Rock",
+			"bpm": null,
+			"key": "indefinido",
+			"fecha_lanzamiento": "2023-08-06",
+			"status": 1,
+			"artista": {
+				"id": 217,
+				"nombre_artista": "La Rana Roja",
+				"instagram": "",
+				"spotify": "",
+				"imagen": "https://api.leotheprodu.com/1691456982229.png",
+				"info": "Rock Band\r\nHeredia, Costa Rica",
+				"tipo": 1,
+				"user_id": 119
+			}
+		},
+		{
+			"id": 45,
+			"nombre": "Jump🍑Up🆙",
+			"descripcion": "Jump🍑UP🆙\nSuscribete ven y disfruta del Reggae Dancehall.\n\nLimon Costa Rica I SO WE DO IT!!",
+			"id_artista": 216,
+			"spotify_link": null,
+			"youtube_id": "vJ6TX5kkk3U",
+			"destacado": 1,
+			"tipo_obra": 1,
+			"estilo": "secular",
+			"genero": "reggaeton",
+			"bpm": 105,
+			"key": "indefinido",
+			"fecha_lanza
+...
+Response: 200 50.532 ms 
