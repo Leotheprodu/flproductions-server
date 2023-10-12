@@ -754,3 +754,47 @@ Response Body:
 			"fecha_lanza
 ...
 Response: 200 50.532 ms 
+
+Request: OPTIONS /api/auth/check-session at Wed Oct 11 2023 19:00:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 2.261 ms 
+
+Request: OPTIONS /api/system-messages at Wed Oct 11 2023 19:00:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.609 ms 
+
+Request: OPTIONS /api/usuarios/avatar/44 at Wed Oct 11 2023 19:00:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response: 204 0.236 ms 
+
+Request: GET /api/auth/check-session at Wed Oct 11 2023 19:00:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"message": "El usuario no ha iniciado sesion"
+}
+Response: 304 7.360 ms 
+
+Request: GET /api/system-messages at Wed Oct 11 2023 19:00:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+[
+	{
+		"id": 1,
+		"tipo_de_mensaje": "mainTop",
+		"id_role": 8,
+		"mensaje": "Consigue un 33% de descuento, solo agrega tu musica"
+	},
+	{
+		"id": 2,
+		"tipo_de_mensaje": "mensajePanel",
+		"id_role": 8,
+		"mensaje": "Hemos actualizado ésta aplicacion, ya puedes crear un artista o productor y puedes cargar tu musica, lo unico que necesitas es tenerla subida en Youtube, y crear tu artista aqui mismo en el panel de control, con tu link de youtube puedes cargar todas tus canciones, mas adelante, agregaremos funcionalidades donde las personas pueden compartir tus canciones, dejar comentarios, un \"tuanis\" (van a ser como los likes de facebook), contactar con tus fans, y ya veremos que mas puedes necesitar, para hacer que tu carrera musical sea mas sencilla."
+	}
+]
+Response: 304 52.576 ms 
+
+Request: GET /api/usuarios/avatar/44 at Wed Oct 11 2023 19:00:07 GMT-0600, IP: ::1, User Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36
+Response Body:
+{
+	"id": 1,
+	"user_id": 44,
+	"avatar": 2,
+	"usuario.username": "LeoTheProdu"
+}
+Response: 304 64.856 ms 
