@@ -1,4 +1,3 @@
-/* DEPENDENCIAS */
 require('dotenv').config({ override: true });
 const express = require('express');
 const PUERTO = process.env.PORT || 5000;
